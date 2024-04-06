@@ -1,0 +1,6 @@
+current_implementation/content_planning/
+.vscode
+out_dir/
+test_outputs/
+__pycache__/
+openfold_params/
