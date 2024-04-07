@@ -137,7 +137,7 @@ def load_a3m_file(file_name: str):
     seqs = [lines[i+1].strip() for i in description_line_indices]
     return seqs
 
-def initial_data_from_seqs(seqs: list[str]):
+def initial_data_from_seqs(seqs):
     """
     Processes raw sequences from an A3M file to extract initial feature representations.
 
