@@ -1,5 +1,5 @@
 import torch
-from kilian.structure_module.residue_constants import rigid_group_atom_positions, chi_angles_mask, atom_types, rigid_group_atom_position_map
+from current_implementation.structure_module.residue_constants import rigid_group_atom_positions, chi_angles_mask, atom_types, rigid_group_atom_position_map
 
 chi_angle_chains = {
     'ALA': [],

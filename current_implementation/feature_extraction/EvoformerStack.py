@@ -1,6 +1,6 @@
 from torch import nn
 
-from kilian.feature_extraction.EvoformerBlock import EvoformerBlock
+from current_implementation.feature_extraction.EvoformerBlock import EvoformerBlock
 
 class EvoformerStack(nn.Module):
     

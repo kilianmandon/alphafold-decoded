@@ -1,13 +1,14 @@
 import torch
 from torch import nn
-from kilian.feature_extraction.EvoformerBlock import MSARowAttentionWithPairBias, MultiHeadAttention, MSATransition, OuterProductMean, PairStack, DropoutRowwise
+from current_implementation.feature_extraction.EvoformerBlock import MSARowAttentionWithPairBias, MSATransition, OuterProductMean, PairStack, DropoutRowwise
+from solutions.attention.mha import MultiHeadAttention
 
 class MSAColumnGlobalAttention(nn.Module):
     
     def __init__(self, c_m, c_z, c=8, N_head=8):
         super().__init__()
         self.layer_norm_m = nn.LayerNorm(c_m)
-        self.global_attention = MultiHeadAttention(c_m, c, attn_dim=-3, N_head=N_head, N_head_kv=1, gated=True, average_queries_over=-3)
+        self.global_attention = MultiHeadAttention(c_m, c, attn_dim=-3, N_head=N_head, gated=True, is_global=True)
 
     def forward(self, m):
         m = self.layer_norm_m(m)
@@ -49,8 +50,8 @@ class ExtraMsaStack(nn.Module):
     def forward(self, e, z):
         for i, block in enumerate(self.blocks):
             e, z = block(e, z)
-            torch.save(e, f'kilian/test_outputs/post_extra_{i}_e.pt')
-            torch.save(z, f'kilian/test_outputs/post_extra_{i}_z.pt')
+            # torch.save(e, f'kilian/test_outputs/post_extra_{i}_e.pt')
+            # torch.save(z, f'kilian/test_outputs/post_extra_{i}_z.pt')
 
         return z
             

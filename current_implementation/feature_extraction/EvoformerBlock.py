@@ -1,6 +1,7 @@
 from torch import nn
 import math
 import torch
+from solutions.attention.mha import MultiHeadAttention
 
 class SharedDropout(nn.Module):
     def __init__(self, shared_dim: int, p: float):
@@ -23,7 +24,7 @@ class DropoutColumnwise(SharedDropout):
     def __init__(self, p: float):
         super().__init__(shared_dim=-2, p=p)
 
-class MultiHeadAttention(nn.Module):
+class OldMultiHeadAttention(nn.Module):
 
     def __init__(self, c_in, c, N_head, attn_dim, gated=False, average_queries_over=None, N_head_kv=None):
         super().__init__()

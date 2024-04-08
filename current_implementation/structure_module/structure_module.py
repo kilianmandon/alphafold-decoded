@@ -1,9 +1,9 @@
 import torch
 from torch import nn
 
-from kilian.structure_module.ipa import InvariantPointAttention
-from kilian.structure_module.geometry import compute_all_atom_coordinates, precalculate_rigid_transforms, build_transform
-from kilian.structure_module import residue_constants
+from current_implementation.structure_module.ipa import InvariantPointAttention
+from current_implementation.structure_module.geometry import compute_all_atom_coordinates, precalculate_rigid_transforms, build_transform
+from current_implementation.structure_module import residue_constants
     
 
 class StructureModuleTransition(nn.Module):

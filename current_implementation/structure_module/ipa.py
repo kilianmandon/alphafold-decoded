@@ -2,7 +2,7 @@ import torch
 import math
 from torch import nn
 
-from kilian.structure_module.geometry import invert_4x4_transform, warp_3d_point
+from current_implementation.structure_module.geometry import invert_4x4_transform, warp_3d_point
 
 class InvariantPointAttention(nn.Module):
     
