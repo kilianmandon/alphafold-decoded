@@ -53,9 +53,6 @@ class Model(nn.Module):
             del e
 
             m, z, s = self.evoformer(m, z)
-            # torch.save(m, 'kilian/test_outputs/m_evo.pt')
-            # torch.save(z, 'kilian/test_outputs/z_evo.pt')
-            # torch.save(s, 'kilian/test_outputs/s_evo.pt')
 
             F = current_batch['target_feat'].argmax(dim=-1) - 1
             structure_output = self.structure_module(s, z, F)
