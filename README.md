@@ -18,20 +18,28 @@ AlphaFold revolutionized the field of protein structure prediction. This project
 
 ## Setup Instructions
 
-1. **Install Mamba (if needed):**
+1. Install a Package Manager (if needed):
 
-   * If you don't have Mamba installed, it provides faster dependency resolution than the standard `conda`. Download instructions can be found on the Mambaforge website: https://mamba.readthedocs.io/en/latest/
+* **Conda:** If you already have Conda installed, it will work perfectly fine to manage the project's dependencies. 
+* **Mamba:** If you're starting from scratch with environment setup, consider installing Mamba. It's a faster alternative to Conda for dependency resolution and package management.  You can find download instructions on the Mambaforge website: [https://mamba.readthedocs.io/en/latest/](https://mamba.readthedocs.io/en/latest/)
 
-2. **Install Dependencies**
+2. Install Dependencies
 
-   * **Choose the right environment file:**
-      * **environment_cpu.yml:** Use this if you **don't** have a compatible NVIDIA GPU 
-      * **environment_cuda.yml:** Use this if you **do** have a compatible NVIDIA GPU
+* **Choose the right environment file:**
+   * **environment_cpu.yml:** Use this if you **don't** have a compatible NVIDIA GPU 
+   * **environment_cuda.yml:** Use this if you **do** have a compatible NVIDIA GPU
+   * **environment_mac.yml:** Use this if you are on a Mac system.
 
-   * **Use Mamba to install the environment:**
-      ```bash
-      mamba env create -f environment_cpu.yml  # Or environment_cuda.yml
-      ```
+* **Use your chosen package manager to install the environment:**
+
+   ```bash
+   # If you've chosen Conda:
+   conda env create -f environment_cpu.yml  # Or environment_cuda.yml, or environment_mac.yml
+
+   # If you've chosen Mamba:
+   mamba env create -f environment_cpu.yml  # Or environment_cuda.yml, or environment_mac.yml
+   ```
+      
 
 3. **Activate the Environment**
 
