@@ -1,0 +1,13 @@
+name: alphafold 
+channels:
+  - nvidia
+  - pytorch  # Add the PyTorch channel
+  - defaults
+dependencies:
+  - python=3.9
+  - pytorch::pytorch
+  - torchvision
+  - matplotlib
+  - ipykernel
+  - pip 
+

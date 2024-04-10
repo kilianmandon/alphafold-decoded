@@ -4,3 +4,13 @@ out_dir/
 test_outputs/
 __pycache__/
 openfold_params/
+
+**/control_values/clusters_assigned.pt
+**/control_values/clusters_masked.pt
+**/control_values/clusters_selected.pt
+**/control_values/clusters_summarized.pt
+**/control_values/extra_msa_cropped.pt
+**/control_values/extra_msa_feat.pt
+**/control_values/full_batch.pt
+**/control_values/initial_data.pt
+**/control_values/msa_feat.pt
