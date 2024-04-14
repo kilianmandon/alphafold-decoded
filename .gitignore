@@ -4,6 +4,7 @@ out_dir/
 test_outputs/
 __pycache__/
 openfold_params/
+data/
 
 **/control_values/clusters_assigned.pt
 **/control_values/clusters_masked.pt

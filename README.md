@@ -51,3 +51,19 @@ AlphaFold revolutionized the field of protein structure prediction. This project
 4. **Select the Kernel in Jupyter Notebook**
 
    * When you open a Jupyter Notebook, ensure the correct kernel is selected. The kernel name should match your environment name (e.g., 'alphafold'). You'll usually find the kernel selection option in the toolbar or a "Kernel" menu within your notebook. 
+
+## Working on the Tutorials
+All of the tutorials are still being improved. 
+The tutorials should be completed in the following order:
+
+1. Tensor Introduction
+2. Machine Learning Introduction
+3. Attention
+4. Feature Extraction
+5. Evoformer (work in progress)
+6. Geometry (work in progress)
+7. Structure Module (work in progress)
+
+If you are already familiar with tensors and machine learning, feel free to start at Attention.
+
+For working on the tutorials, the tutorials folder needs to be your root folder. You can either directly open tutorials in your editor, or you can set "Jupyter: Notebook File Root" as "tutorials" in your workspace settings.

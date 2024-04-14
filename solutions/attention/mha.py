@@ -57,6 +57,10 @@ class MultiHeadAttention(nn.Module):
         if gated:
             self.linear_g = nn.Linear(c_in, c*N_head)
 
+        ##########################################################################
+        #               END OF YOUR CODE                                         #
+        ##########################################################################
+
     def prepare_qkv(self, q: torch.Tensor, k: torch.Tensor, v: torch.Tensor):
         """
         Splits the embeddings into individual heads and transforms the input
@@ -100,6 +104,10 @@ class MultiHeadAttention(nn.Module):
         k = k.transpose(-2, -3)
         v = v.transpose(-2, -3)
 
+        ##########################################################################
+        #               END OF YOUR CODE                                         #
+        ##########################################################################
+
         return q, k, v
 
     def prepare_qkv_global(self, q, k, v):
@@ -138,6 +146,10 @@ class MultiHeadAttention(nn.Module):
 
         q = torch.mean(q, dim=-2, keepdim=True)
 
+        ##########################################################################
+        #               END OF YOUR CODE                                         #
+        ##########################################################################
+
         return q, k, v
 
     def forward(self, x, bias=None):
@@ -153,6 +165,8 @@ class MultiHeadAttention(nn.Module):
         Returns:
             torch.tensor: Output tensor of shape (*, q/k/v, *, c_in)
         """
+
+        out = None
 
         ##########################################################################
         # TODO: Implement the forward pass consisting of the following steps:    #
@@ -204,5 +218,10 @@ class MultiHeadAttention(nn.Module):
             g = torch.sigmoid(self.linear_g(x))
             o = g * o
 
-        m = self.linear_o(o)
-        return m
+        out = self.linear_o(o)
+
+        ##########################################################################
+        #               END OF YOUR CODE                                         #
+        ##########################################################################
+
+        return out
