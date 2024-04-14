@@ -91,6 +91,6 @@ def parse_file(filename, out_name):
 
 
 # Example usage
-inp_name = 'solutions/feature_extraction/feature_extraction.py'
-out_name = 'tutorials/feature_extraction/feature_extraction.py'
+inp_name = 'solutions/tensor_introduction/tensor_introduction_solution.ipynb'
+out_name = 'tutorials/tensor_introduction/tensor_introduction.ipynb'
 parse_file(inp_name, out_name)

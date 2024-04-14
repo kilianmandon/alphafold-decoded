@@ -189,7 +189,7 @@ class TriangleMultiplication(nn.Module):
         self.linear_a_g = nn.Linear(c_z, c)
         self.linear_b_p = nn.Linear(c_z, c)
         self.linear_b_g = nn.Linear(c_z, c)
-        self.linear_g = nn.Linear(c_z, c)
+        self.linear_g = nn.Linear(c_z, c_z)
         self.linear_z = nn.Linear(c, c_z)
 
     def forward(self, z):
@@ -266,7 +266,7 @@ class PairStack(nn.Module):
         z = z + self.dropout_rowwise(self.tri_mul_out(z))
         z = z + self.dropout_rowwise(self.tri_mul_in(z))
         z = z + self.dropout_rowwise(self.tri_att_start(z))
-        z = z + self.dropout_rowwise(self.tri_att_end(z))
+        z = z + self.dropout_columnwise(self.tri_att_end(z))
         z = z + self.pair_transition(z)
         return z
 
