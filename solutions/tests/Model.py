@@ -1,11 +1,11 @@
 import torch
 from torch import nn
 
-from current_implementation.feature_extraction.InputEmbedder import InputEmbedder, ExtraMsaEmbedder
-from current_implementation.feature_extraction.RecyclingEmbedder import RecyclingEmbedder
-from current_implementation.feature_extraction.ExtraMsaStack import ExtraMsaStack
-from current_implementation.feature_extraction.EvoformerStack import EvoformerStack
-from current_implementation.structure_module.structure_module import StructureModule
+from feature_embedding.input_embedder import InputEmbedder, ExtraMsaEmbedder
+from feature_embedding.recycling_embedder import RecyclingEmbedder
+from feature_embedding.extra_msa_stack import ExtraMsaStack
+from evoformer.evoformer import EvoformerStack
+from tests.structure_module.structure_module import StructureModule
 
 class Model(nn.Module):
     

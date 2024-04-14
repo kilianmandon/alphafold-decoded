@@ -1,7 +1,7 @@
 import torch
 from torch import nn
-from solutions.evoformer.dropout import DropoutRowwise, DropoutColumnwise
-from solutions.attention.mha import MultiHeadAttention
+from evoformer.dropout import DropoutRowwise, DropoutColumnwise
+from attention.mha import MultiHeadAttention
 
 class TriangleMultiplication(nn.Module):
     """
@@ -277,6 +277,7 @@ class PairStack(nn.Module):
         ##########################################################################
         # TODO: Implement the forward pass for the pair stack from Algorithm 6.  #
         ##########################################################################
+
         z = z + self.dropout_rowwise(self.tri_mul_out(z))
         z = z + self.dropout_rowwise(self.tri_mul_in(z))
         z = z + self.dropout_rowwise(self.tri_att_start(z))

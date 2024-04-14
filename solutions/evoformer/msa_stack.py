@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from solutions.attention import MultiHeadAttention
+from attention.mha import MultiHeadAttention
 
 class MSARowAttentionWithPairBias(nn.Module):
     """

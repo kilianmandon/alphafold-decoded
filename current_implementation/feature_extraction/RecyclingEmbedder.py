@@ -13,8 +13,8 @@ class RecyclingEmbedder(nn.Module):
         self.layer_norm_z = nn.LayerNorm(c_z)
         self.linear = nn.Linear(self.bin_count, c_z)
     
-    def forward(self, m, z, m_prev, z_prev, x_prev):
-        m[..., 0, :, :] += self.layer_norm_m(m_prev[..., 0, :, :])
+    def forward(self, m_prev, z_prev, x_prev):
+        m_out = self.layer_norm_m(m_prev[..., 0, :, :])
 
         d = torch.linalg.vector_norm(x_prev.unsqueeze(-2) - x_prev.unsqueeze(-3), dim=-1)
 
@@ -27,6 +27,6 @@ class RecyclingEmbedder(nn.Module):
 
 
 
-        z += d + self.layer_norm_z(z_prev)
+        z_out = d + self.layer_norm_z(z_prev)
 
-        return m, z
+        return m_out, z_out

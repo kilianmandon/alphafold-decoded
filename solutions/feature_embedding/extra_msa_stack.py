@@ -1,8 +1,8 @@
 from torch import nn
-from solutions.attention.mha import MultiHeadAttention
-from solutions.evoformer.dropout import DropoutRowwise
-from solutions.evoformer.msa_stack import MSARowAttentionWithPairBias, MSATransition, OuterProductMean
-from solutions.evoformer.pair_stack import PairStack
+from attention.mha import MultiHeadAttention
+from evoformer.dropout import DropoutRowwise
+from evoformer.msa_stack import MSARowAttentionWithPairBias, MSATransition, OuterProductMean
+from evoformer.pair_stack import PairStack
 
 class ExtraMsaEmbedder(nn.Module):
     """

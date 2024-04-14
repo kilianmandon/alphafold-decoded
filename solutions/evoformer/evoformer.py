@@ -1,8 +1,8 @@
 import torch
 from torch import nn
-from solutions.evoformer.dropout import DropoutRowwise
-from solutions.evoformer.msa_stack import MSARowAttentionWithPairBias, MSAColumnAttention, OuterProductMean, MSATransition
-from solutions.evoformer.pair_stack import PairStack
+from evoformer.dropout import DropoutRowwise
+from evoformer.msa_stack import MSARowAttentionWithPairBias, MSAColumnAttention, OuterProductMean, MSATransition
+from evoformer.pair_stack import PairStack
 
 
 class EvoformerBlock(nn.Module):
@@ -27,8 +27,8 @@ class EvoformerBlock(nn.Module):
 
         self.dropout_rowwise_m = DropoutRowwise(p=0.15)
         self.msa_att_row = MSARowAttentionWithPairBias(c_m, c_z)
-        self.msa_att_col = MSAColumnAttention(c_m, c_z)
-        self.msa_transition = MSATransition(c_m, )
+        self.msa_att_col = MSAColumnAttention(c_m)
+        self.msa_transition = MSATransition(c_m)
         self.outer_product_mean = OuterProductMean(c_m, c_z)
         self.core = PairStack(c_z)
 
