@@ -119,6 +119,31 @@ folder_copy_paths = [
     'geometry/control_values',
 ]
 
+import glob
+
+# Pattern 1: All __init__.py files directly within a subfolder of tutorials
+pattern1 = "solutions/*/__init__.py"
+files1 = glob.glob(pattern1)
+
+# Pattern 2: All __init__.py files in a 'control_values' subfolder within tutorials
+pattern2 = "solutions/*/control_values/__init__.py"
+files2 = glob.glob(pattern2)
+
+# Combine the results 
+all_init_files = files1 + files2
+all_init_files = [path.replace('solutions/', '') for path in all_init_files]
+file_copy_paths += all_init_files
+
+def delete_tutorials_contents():
+    tutorials_path = 'tutorials'
+    if os.path.exists(tutorials_path):
+        shutil.rmtree(tutorials_path)
+        print("The 'tutorials' folder and its contents have been deleted.")
+    else:
+        print("The 'tutorials' folder doesn't exist.")
+
+delete_tutorials_contents()
+
 
 
 def clear_notebook_outputs(notebook_path):
@@ -150,12 +175,13 @@ for path in python_paths:
     if full_target.endswith('.ipynb'):
         clear_notebook_outputs(full_target)
 
+for path in folder_copy_paths:
+    full_source = f'solutions/{path}'
+    full_target = f'tutorials/{path}' 
+    shutil.copytree(full_source, full_target)
+
 for path in file_copy_paths:
     full_source = f'solutions/{path}'
     full_target = f'tutorials/{path}' 
     shutil.copyfile(full_source, full_target)
 
-for path in folder_copy_paths:
-    full_source = f'solutions/{path}'
-    full_target = f'tutorials/{path}' 
-    shutil.copytree(full_source, full_target)
