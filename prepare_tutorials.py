@@ -1,5 +1,10 @@
 import re
 import numpy as np
+import os
+from pathlib import Path
+import shutil
+from nbformat import read, write
+
 
 def parse_file(filename, out_name):
     """Parses a Jupyter Notebook file, searches for TODO blocks and replaces them 
@@ -77,20 +82,80 @@ def parse_file(filename, out_name):
             leading_whitespace_ipynb = np.max(leading_whitespace_ipynb)
             lines = lines[:replace_start] + gen_replace_with(leading_whitespace_code, leading_whitespace_ipynb)  + lines[replace_stop:]
 
+        Path(out_name).parent.mkdir(parents=True, exist_ok=True)
+
         with open(out_name, 'w') as f:
             f.writelines(lines)
 
 
-            
-        
+python_paths = [
+    'tensor_introduction/tensor_introduction.ipynb',
+    'machine_learning_introduction/machine_learning_introduction.ipynb',
+    'machine_learning_introduction/feed_forward.py',
+    'attention/attention.ipynb',
+    'attention/mha.py',
+    'feature_extraction/feature_extraction.py',
+    'feature_extraction/feature_extraction.ipynb',
+    'evoformer/dropout.py',
+    'evoformer/msa_stack.py',
+    'evoformer/pair_stack.py',
+    'evoformer/evoformer.py',
+    'evoformer/evoformer.ipynb',
+    'geometry/geometry.py',
+    'geometry/geometry.ipynb',
+]
+
+file_copy_paths = [
+    'feature_extraction/alignment_tautomerase.a3m'
+]
+
+folder_copy_paths = [
+    'tensor_introduction/control_values',
+    'machine_learning_introduction/control_values',
+    'attention/control_values',
+    'feature_extraction/control_values',
+    # 'evoformer/control_values',
+    'evoformer/images',
+    'geometry/control_values',
+]
 
 
 
+def clear_notebook_outputs(notebook_path):
+    nb = read(notebook_path, as_version=4)
+    nb.metadata.clear()  # Clear metadata first (important for outputs)
+    for cell in nb.cells:
+        if cell.cell_type == 'code':
+            cell.outputs = []      
+    write(nb, notebook_path)
 
-    
 
+# --- Assertions ---
+for path in python_paths + file_copy_paths:
+    full_source = f'solutions/{path}'
+    full_target = f'tutorials/{path}' 
+    assert os.path.isfile(full_source), f"Source file not found: {full_source}"
 
-# Example usage
-inp_name = 'solutions/feature_extraction/feature_extraction.py'
-out_name = 'tutorials/feature_extraction/feature_extraction.py'
-parse_file(inp_name, out_name)
+for path in folder_copy_paths:
+    full_source = f'solutions/{path}'
+    full_target = f'tutorials/{path}' 
+    assert os.path.isdir(full_source), f"Source folder not found: {full_source}"
+
+# --- Copying ---
+for path in python_paths:
+    full_source = f'solutions/{path}'
+    full_target = f'tutorials/{path}' 
+    parse_file(full_source, full_target)
+
+    if full_target.endswith('.ipynb'):
+        clear_notebook_outputs(full_target)
+
+for path in file_copy_paths:
+    full_source = f'solutions/{path}'
+    full_target = f'tutorials/{path}' 
+    shutil.copyfile(full_source, full_target)
+
+for path in folder_copy_paths:
+    full_source = f'solutions/{path}'
+    full_target = f'tutorials/{path}' 
+    shutil.copytree(full_source, full_target)

@@ -9,5 +9,7 @@ dependencies:
   - torchvision
   - matplotlib
   - ipykernel
+  - ipywidgets
+  - ipympl
   - pip 
 

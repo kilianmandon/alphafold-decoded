@@ -18,39 +18,62 @@ AlphaFold revolutionized the field of protein structure prediction. This project
 
 ## Setup Instructions
 
-1. Install a Package Manager (if needed):
+**Choose the method that works best for you:**
 
-* **Conda:** If you already have Conda installed, it will work perfectly fine to manage the project's dependencies. 
-* **Mamba:** If you're starting from scratch with environment setup, consider installing Mamba. It's a faster alternative to Conda for dependency resolution and package management.  You can find download instructions on the Mambaforge website: [https://mamba.readthedocs.io/en/latest/](https://mamba.readthedocs.io/en/latest/)
+### Working with Colab (Recommended for beginners)
 
-2. Install Dependencies
+Colab provides a fast and easy way to get started with the tutorials, especially if you don't have a powerful GPU. You can even access a GPU within Colab for the final prediction steps.
 
-* **Choose the right environment file:**
-   * **environment_cpu.yml:** Use this if you **don't** have a compatible NVIDIA GPU 
-   * **environment_cuda.yml:** Use this if you **do** have a compatible NVIDIA GPU
-   * **environment_mac.yml:** Use this if you are on a Mac system.
+1. **Upload the 'tutorials' folder to Google Drive.**
 
-* **Use your chosen package manager to install the environment:**
+2. **Activate Colab in Google Drive:**
+   * Go to My Drive -> More -> Connect more Apps
+   * Search for "Colaboratory" and install it
 
-   ```bash
-   # If you've chosen Conda:
-   conda env create -f environment_cpu.yml  # Or environment_cuda.yml, or environment_mac.yml
+3. **Open a tutorial notebook in Colab:**
+   * Navigate to the `.ipynb` file of the tutorial you want to run in your Google Drive.
+   * Right-click the file and select Open with -> Colaboratory 
 
-   # If you've chosen Mamba:
-   mamba env create -f environment_cpu.yml  # Or environment_cuda.yml, or environment_mac.yml
-   ```
-      
+4. **Grant permissions when prompted.**
 
-3. **Activate the Environment**
+5. **Enable GPU (optional):**
+   * If the tutorial requires a GPU, go to Runtime -> Change Runtime Type -> Select "GPU" and save.
 
-   * Before running your notebooks, activate the project's environment:
+6. **Set your folder path (first cell):**
+   * In the first code cell of your notebook, you'll likely see a line to set the `folder_name`. Update this with the correct path to your 'tutorials' folder in Google Drive.  
+
+### Local Setup (For advanced users) 
+
+If you're an advanced user and prefer working in your own local environment, follow these steps:
+
+1. **Install a Package Manager (if needed):**
+   * **Conda:** If you have Conda, proceed to the next step.
+   * **Mamba:** For faster setup, install Mamba ([https://mamba.readthedocs.io/en/latest/](https://mamba.readthedocs.io/en/latest/)).
+
+2. **Install Dependencies**
+   * **Select the right environment file:**
+      * `environment_cpu.yml` (no GPU) 
+      * `environment_cuda.yml` (NVIDIA GPU)
+      * `environment_mac.yml` (Mac systems)  
+   * **Install using Conda or Mamba:**
       ```bash
-      conda activate alphafold
+      # With Conda:
+      conda env create -f environment_cpu.yml  # Or environment_cuda.yml/mac.yml
+
+      # With Mamba:
+      mamba env create -f environment_cpu.yml  # Or environment_cuda.yml/mac.yml
       ```
 
-4. **Select the Kernel in Jupyter Notebook**
+3. **Activate the Environment:**
+   ```bash
+   conda activate alphafold
+   ```
 
-   * When you open a Jupyter Notebook, ensure the correct kernel is selected. The kernel name should match your environment name (e.g., 'alphafold'). You'll usually find the kernel selection option in the toolbar or a "Kernel" menu within your notebook. 
+4. **Launch Jupyter Notebook and Select Kernel:**
+   * Start Jupyter Notebook from the 'tutorials' folder.
+   * In text editors like VS Code, set the workspace setting "Jupyter: Notebook File Root" to 'tutorials'.
+   * Open a tutorial, ensuring the kernel name matches your environment ('alphafold').
+
 
 ## Working on the Tutorials
 All of the tutorials are still being improved. 
@@ -65,5 +88,3 @@ The tutorials should be completed in the following order:
 7. Structure Module (work in progress)
 
 If you are already familiar with tensors and machine learning, feel free to start at Attention.
-
-For working on the tutorials, the tutorials folder needs to be your root folder. You can either directly open tutorials in your editor, or you can set "Jupyter: Notebook File Root" as "tutorials" in your workspace settings.

@@ -10,5 +10,7 @@ dependencies:
   - matplotlib
   - cpuonly
   - ipykernel
+  - ipywidgets
+  - ipympl
   - pip 
 
