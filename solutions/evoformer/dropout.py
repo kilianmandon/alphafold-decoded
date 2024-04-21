@@ -63,7 +63,7 @@ class DropoutRowwise(SharedDropout):
         # TODO: Initialize the super class by choosing the right shared          #
         #        dimension for row-wise dropout.                                 #
         ##########################################################################
-        super().__init__(shared_dim=-3, p=p)
+        super().__init__(shared_dim=-2, p=p)
         ##########################################################################
         #               END OF YOUR CODE                                         #
         ##########################################################################
@@ -74,7 +74,7 @@ class DropoutColumnwise(SharedDropout):
         # TODO: Initialize the super class by choosing the right shared          #
         #        dimension for column-wise dropout.                              #
         ##########################################################################
-        super().__init__(shared_dim=-2, p=p)
+        super().__init__(shared_dim=-3, p=p)
         ##########################################################################
         #               END OF YOUR CODE                                         #
         ##########################################################################

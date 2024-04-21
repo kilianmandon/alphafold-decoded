@@ -100,17 +100,20 @@ class MSAColumnAttention(nn.Module):
             torch.tensor: Output tensor of the same shape as m.
         """
 
+        out = None
 
         ##########################################################################
         # TODO: Implement the forward pass for Algorithm 8.                      #
         ##########################################################################
 
         m = self.layer_norm_m(m)
-        return self.mha(m)
+        out = self.mha(m)
 
         ##########################################################################
         #               END OF YOUR CODE                                         #
         ##########################################################################
+
+        return out
 
 
 class MSATransition(nn.Module):

@@ -35,7 +35,7 @@ class TriangleMultiplication(nn.Module):
         ##########################################################################
 
         self.layer_norm_in = nn.LayerNorm(c_z)
-        self.layer_norm_out = nn.LayerNorm(c_z)
+        self.layer_norm_out = nn.LayerNorm(c)
         self.linear_a_p = nn.Linear(c_z, c)
         self.linear_a_g = nn.Linear(c_z, c)
         self.linear_b_p = nn.Linear(c_z, c)
