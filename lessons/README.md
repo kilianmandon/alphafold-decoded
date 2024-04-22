@@ -1,0 +1,11 @@
+# On the use of this material
+
+Coding AlphaFold yourself is not done in one day, not if you aren't a machine-learning and geometry expert before already. Depending on your background, the tutorials here can be really hard for you. That's not a problem, it is expected. There are many different ways to go through this material. 
+
+We explicitly provide solutions to all the tutorials on [our github](https://github.com/kilianmandon/alphafold-decoded). If you struggle with an exercise, feel free to check them out. Programming is way less like math when it comes to 'spoiling the learning effect by not coming  to the result yourself'. Rather, seeing how another programmer has solved a task can be really educative, as there are a lot of different styles and approaches to problems, and looking at code from another developer can greatly improve your own style.
+
+Another good option for when you are stuck are Chatbots, like ChatGPT or Google Gemini. You are probably already familiar with their use, and not only can they solve most of the problems here if you provide them with the context, they can also explain the solution and the syntax being used, and showcase different ways to solve the problem.
+
+If you find that you heavily rely on the solutions, on googling or on using ChatGPT to solve the tutorials, there is nothing wrong with that. We suggest however, that when you are done with the notebook, try redoing it, or even redo it twice for speed. Programming is a lot about memoization of patterns to solve different settings.
+
+With that out of the way, we are happy that you start on this journey! Learning AlphaFold is somewhat complex, but it is also incredibly educative. It's not just an example for a modern machine learning architecture, but it is also deeply geometric. You will learn how rotations in 3D work, what quaternions are, and how to consider geometric vicinity in attention modules. This is a lot of material, so don't overstress yourself and go through everything at your own pace. Now, if you are ready, open the first notebook, the introduction to tensors, and let's get started.
