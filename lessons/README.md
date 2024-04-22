@@ -1,6 +1,6 @@
 # On the use of this material
 
-Coding AlphaFold yourself is not done in one day, not if you aren't a machine-learning and geometry expert before already. Depending on your background, the tutorials here can be really hard for you. That's not a problem, it is expected. There are many different ways to go through this material. 
+Coding AlphaFold yourself is not done in one day, not if you aren't a machine-learning and geometry expert before already. The material tries to cover all the necessary topics on the way, but to do this, it quickly picks up the pace. Depending on your background, the tutorials here can be really hard for you. That's not a problem, it is expected. There are many different ways to go through this material. 
 
 We explicitly provide solutions to all the tutorials on [our github](https://github.com/kilianmandon/alphafold-decoded). If you struggle with an exercise, feel free to check them out. Programming is way less like math when it comes to 'spoiling the learning effect by not coming  to the result yourself'. Rather, seeing how another programmer has solved a task can be really educative, as there are a lot of different styles and approaches to problems, and looking at code from another developer can greatly improve your own style.
 

@@ -65,4 +65,90 @@ Here, $R$ is a 3x3 matrix, and $t$ is a 3-element vector. If we want to crop the
 `R = T[0:3, 0:3]`, to specify that for the rows and columns, we want to go from index 0 (inclusive) to index 3 (exclusive). Starting at 0 is the default, so we could rewrite this as `R = T[:3, :3]`.
 For the translation, we want the first 3 rows, but only the fourth column. We can write this as `t = T[:3, 3]`. As the fourth row is the last row, we could also write this as `t = T[:3, -1]`, using negative indexing. With this syntax, t would be a one-dimensional tensor. But we might want to concatenate $R$ and $t$ again later into a 3x4 tensor. For this, R and t would need the same number of dimensions, R would be a 3x3 tensor and t a 3x1 tensor. For this, we could also use slicing in the following way: `t = T[:3, 3:4]`, or `t=T[:3, 3:]`, as going to the end is the default. This pattern of using one-element slices, like 3:4, is common to conserve one-dimensions.
 
-~ 2:30 Min
+Now, we might not work with a single transform `T` of shape (4, 4), but with a batch of trasforms of shape (N, 4, 4). Or we might even have one transform for each backbone in the batch, so we would have shape (N, N_res, 4, 4). To account for this, PyTorch provides the ellipsis operator `...` which is really useful. It expands to as many `:` as are necessary to match the dimensions. The syntax `R = T[..., :3, :3]` correctly extracts the rotation matrices. For the batched case, `...` would expand to `:`. For the double-batched case, it would be `:, :` and for non-batch use, it isn't considered at all.
+
+As a last note on indexing, we will talk on left-hand side and right-hand side indexing. The terms left-hand side and right-hand side refer to the left and right side of an equal sign in programming. So far, we have only used right-hand side indexing, where we index to access a slice of a tensor, and assign it to a variable or process it further.
+
+Left-hand side indexing works just as well: Let's say we have a 3x3 tensor `A`, and we want to replace it's middle column with the tensor [0, 1, 2]. We  can do that like this:
+
+`A[:, 1] = torch.tensor([0, 1, 2])`
+
+Here, we used left-hand side indexing to select the slice of `A` and assign new values to it. This also works with all other indexing techniques.
+
+~ 3:45
+
+
+----------- Part One -----------------------------
+
+Topics for Part 2: Computations and reductions along axes, broadcasting, torch.einsum
+
+Welcome to part 2 of our Introduction to Tensors! In the first part, we covered many of the basics regarding tensors, like the creation of tensors, indexing and reshaping. In this part, we want to highlight some more advanced concepts, in particular computations along axes, broadcasting and the einsum method.
+
+## Computations Along Axes
+Let's start with computations along axes. Say you have got a 4x3 matrix and you want to sum up the elements. You have three  different options: Summing up all elements (resulting in a 1-element tensor), summing up all the rows (resulting in a 3-element tensor) or summing up all the colunmns (resulting in a 4-element tensor). You can specify the behaviour by setting the `dim` argument in the method `torch.sum`. If set to `dim=0`, summation will happen along the row dimension. If set to `dim=1` summation will happen along the column dimension. If set to `None`, all elements will be summed up. You can also set it to a tuple: Let's say you had a batch of matrices, of shape (N, 4, 3). You can calculate the sum of all elements for the matrices individually as `torch.sum(A, dim=(1, 2))` or `torch.sum(A, dim=(-1,-2))` using negative indexing.
+
+There are many such operations: With `torch.argmax` you can compute the index of the largest element (total or per row/column), with `torch.mean` and `torch.std` you can compute the mean and standard deviation, and with `torch.linalg.vector_norm` you can compute the standard L2-norm along a dimension. All of these examples are reducing, that means that the dimension you specified as `dim` will be missing in the output shape. You can set the parameter `keepdim=True` to keep it as a one-dimension. This can be really useful, for example to allow for concatenation or broadcasting. 
+
+There are also computations along axes that aren't reducing. One that we will use in the tutorials is the softmax function. The sofmax function takes a vector $\bold{x}$ and creates a new vector according to
+$$\operatorname{softmax}(x)_i = \frac{\exp{x_i}}{\sum_j\exp{x_j}}$$
+It has three important properties: 
+- The entries sum up to 1, so the results can be interpreted as a probability distribution
+- If one value in the input is significantly larger than the others (say larger by ~6), the result will be close a one-hot vector where only this entry is 1 and the others are 0, since the exponential function boosts large values overproportionally strong
+- In comparison to a 'hard' max function that sets the largest value to 1 and all others to 0, it distributes the mass more smoothly if the large values are close to each other. 
+
+Even though the softmax function is no reduction, it needs a specified dimension, as it is a vector to vector calculation. Along the specified dimension, it will create values that sum up to one. Along the other dimensions, it doesn't have this property.
+
+Another similar case where you need to think about axes is when concatenating or stacking tensors. Let's say you have three 4-element tensors `u`, `v`, and `w`. You can use `torch.stack` to stack them to a matrix. If you stack them as `torch.stack((u, v, w), dim=0)`, you will get a 3x4 matrix where the vectors are the individual rows. If you use `torch.stack((u, v, w), dim=1)` or `torch.stack((u, v, w), dim=-1)`, you will get a 4x3 matrix with the vectors as the individual column. The position of the newly introduced dimension 3 is given by `dim`. For `torch.stack`, all tensors to be stacked need to have the same shape, so that the resulting tensor has block form. The similar `torch.cat` doesn't introduce a new dimension but glues the tensors together along an existing dimension. We've mentioned before, when we extracted the 3x3 matrix `R` and the translation vector `t` from the 4x4 tensor `T`, that it is beneficial to extract `t` with slicing so that it has shape (3, 1) instead of (3,). This is practical here: If we wanted to concatenate `R` and `t` again, we can do so using `torch.cat((R, t), dim=-1)` since they have the same number of dimensions.
+
+## Broadcasting
+We have hinted on broadcasting quite a bit when talking about the importance of one-dimensions. Here, we will finally see what all the fuzz is about. 
+
+In it's simplest form, broadcasting follows this idea: Let's say we have a 4x3 matrix `A` and a vector `B = torch.tensor([1, 2, 3])`. `B` has the same number of elements as the rows of `A`, and we might want to add it to each row of `A`. To do so, we would need to broadcast it from it's current shape `(3,)` to the shape `(4, 3)`, i.e. to `torch.tensor([[1,2,3],[1,2,3],[1,2,3],[1,2,3]])`. Broadcasting in PyTorch allows us to do just that. First, we would introduce a new one-dimension to `B` and get it to shape (1, 3). This means interpreting the vector `B` as a matrix with one row. We have several options to do so: `B=B[None, :]`, `B = B.unsqueeze(0)`, or `B = B.reshape(1, 3)` are all equally effective in creating the new shape for `B`. Now, if we try to add `A` and `B`, PyTorch automatically broadcasts `B` to shape (4, 3) by duplicating the row. 
+
+If we had `B = torch.tensor([1,2,3,4])` instead, we could do the same trick to add `B` to all columns of `A`. First, we'd compute `B = B.reshape(4, 1)` so that it is a matrix with one column, and when computing `A + B` now, it is implicitly broadcasted to shape (4, 3) to match the shape of `A`. 
+
+In general, the rules for broadcasting are the following: 
+* the dimensions of A and B are aligned with each other
+* to be broadcastable, the individual dimensions must be equal, or set to one for one of the tensors
+* along these one-dimensions, the tensor is expanded by duplicating it, until it matches the shape of the other
+
+There actually is one more rule:
+* dimensions are aligned from right to left. If one tensor has fewer dimensions than the other, ones are prepended to match the number of dimensions
+
+With this last rule, we could have left out the reshaping when adding `B` as a row vector to `A`. The shapes (4, 3) and (3,) are broadcastable, as they are aligned from left to right, and ones are prepended to match the number of dimensions.
+
+Let's look at another example: Say we have a batch V of vectors, a tensor of shape (N, 3), and we wanted to normalize them. We can compute the norms for each vector by using `norms = torch.linalg.vector_norm(V, dim=-1)`. The result is of shape (N,). We can unsqueeze it with `norms=norms.reshape(N, 1)`. Now, it is broadcastable and we can compute 
+`V_normalized = V / norms`
+However, we could have saved the intermediate step by using `keepdim`:
+`V_normalized = V / torch.linalg.vector_norm(V, dim=-1, keepdim=True)`
+This way, the calculated norms directly have shape (N, 1) and are broadcastable against `V`. 
+
+Another usecase for broadcasting are 'each-with-each' operations. Let's say we have a 3-element vector `v` and a 2 element vector `w`. If we want to compute the product of each element of `v` with each element of `w`, we would get six elements in total. We can organize them in a 3x2 matrix, where the entry i,j is made up of `v[i] * w[j]`. This is called the outer product of `v` and `w`. We can calculate this using broadcasting, by reshaping `v` to a 3x1 column vector and `w` to a 1x2 row vector, followed by a broadcast multiplication of the two. 
+
+## torch.einsum
+Broadcasting is an incredibly powerful tool. Together with the indexing, reshaping and reduction techniques we have seen so far, we already have sufficient tools to solve almost any problem in the whole series. 
+
+If you try to do so however, you will see that these methods can quickly get a little cumbersome. Let's look at the most classic tensor-tensor operation: Matrix multiplication. Given two matrices `A` of shape (i,k) and `B` of shape (k,j), the matrix product can formulated like this:
+
+For each row of `A` and for each column of `B`, calculate the pointwise product of the row and the column. After that, sum up along the row-dimension of `A` (which is the column dimension of `B`)
+
+We have seen before that 'each-with-each' calculations can be computed by expanding with one-dimensions and doing a broadcast multiplication. For the first step of this problem, we would calculate `C = A.reshape(i, k, 1) * B.reshape(1, k, j)`. The result would be a tensor of shape (i,k,j). The slices `C[i, :, j]` consist of the pointwise multiplication of the i-th row of `A` with the j-th column of `B`. For matrix multiplication, we would calculate `C = torch.sum(C, dim=1)` to sum these elements up.
+
+We might also want to compute batched matrix multiplication, where `A` has shape (N, i, k) and `B` has shape (N, k, j). We could compute this as 
+`C = torch.sum(A.reshape(N, i, k, 1) * B.reshape(N, 1, k, j), dim=-2)`
+
+In this example, we see all typical elements of a tensor-tensor operation: Some of the dimensions (i and j) are present in one of the educts but not the other, and are worked on in an 'each-with-each' fashion. One dimension (k) is present in both and aligned. After calculating the product of the aligned vectors, the dimension is contracted by summation. One dimension (N) is present in both and is just for a batched, 'for-each' calculation. 
+
+PyTorch has a method to cover all these cases in a really concise manner, by using the Einstein notation with `torch.einsum`. The method takes an equation string and the tensors that are used in the operation. For our case of matrix multiplication, the operation would be `torch.einsum('ik,kj->ij', A, B)`. The batched matrix multiplication would be computed as `torch.einsum('Nik,Nkj->Nij', A, B)`. The equation string directly follows the rules we have seen above:
+* if a letter is present in one of the educts, but not in the other and kept in the product (like i and j), the other tensor is unsqueezed and broadcasted to include the dimension
+* if a letter is present in both educts, but not in the product (like k), it is contracted 
+* if a letter is present in both educts and the product, it is treated as a batched, 'for-each' dimension
+
+In the same way we used the ellipsis operator before during indexing, we can use it here as well to account for any number (or none at all) of prepended batch dimensions. With `torch.einsum('...ik,...kj->...ij', A, B)` we can cover both the batched and non-batched case simultaneously.
+
+Another example is the outer product we computed earlier. Without explicitly reshaping the tensors ourselves, it can be written as `torch.einsum('i,j->ij', v, w)`. 
+
+`torch.einsum` is incredibly flexible. You will use it all the time in the tutorials, and you will have quite a bit of examples in the tutorial for this tensor introduction as well. The construction of the equation string can be a bit tricky at the start, but you will quickly get used to it. 
+
+## Conclusion
+With this, we are done with the introduction to tensors. In total, this was a quite extensive introduction, but it has the benefit that you've already seen almost all of the operations you will need during the series. There are of course some more miscallaneous operations we will need during the way, but with all the tools discussed in here, you have enough foundation to look up new methods online or with ChatGPT. We have prepared a tutorial Jupyter Notebook where you are guided through using all the methods we have shown you. After that, you will be well prepared to start with the next part of the series: The Introduction to Machine Learning.
