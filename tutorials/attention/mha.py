@@ -141,7 +141,13 @@ class MultiHeadAttention(nn.Module):
         #   - Scale the queries by 1/sqrt(c).                                    #
         #   - Calculate the attention weights of shape (*, N_head, q, k)         #
         #       from q and k. You can use torch.einsum for this.                 #
-        #   - If a bias was given, add the bias.                                 #
+        #   - If a bias was given:                                               #
+        #       - extract the bias shape by omitting the last 3 dims from bias.  #
+        #       - construct a broadcastable bias shape, by concatenating         #
+        #           bias_batch_shape, (1,) * n, and the last three dims of bias. #
+        #           Choose n such that the broadcastable shape has as many dims  #
+        #           as the attention scores.                                     #
+        #       - add the bias to the attention scores.                          #
         #   - Use softmax to convert the attention scores into a                 #
         #       probability distribution.                                        #
         #   - Weight the value vectors by the attention weights and sum          #

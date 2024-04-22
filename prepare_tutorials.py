@@ -3,7 +3,7 @@ import numpy as np
 import os
 from pathlib import Path
 import shutil
-from nbformat import read, write
+import nbformat
 
 
 def parse_file(filename, out_name):
@@ -101,6 +101,9 @@ python_paths = [
     'evoformer/pair_stack.py',
     'evoformer/evoformer.py',
     'evoformer/evoformer.ipynb',
+    'feature_embedding/extra_msa_stack.py',
+    'feature_embedding/input_embedder.py',
+    'feature_embedding/recycling_embedder.py',
     'geometry/geometry.py',
     'geometry/geometry.ipynb',
 ]
@@ -114,8 +117,9 @@ folder_copy_paths = [
     'machine_learning_introduction/control_values',
     'attention/control_values',
     'feature_extraction/control_values',
-    # 'evoformer/control_values',
+    'evoformer/control_values',
     'evoformer/images',
+    'feature_embedding/control_values',
     'geometry/control_values',
 ]
 
@@ -147,12 +151,12 @@ delete_tutorials_contents()
 
 
 def clear_notebook_outputs(notebook_path):
-    nb = read(notebook_path, as_version=4)
+    nb = nbformat.read(notebook_path, as_version=4)
     nb.metadata.clear()  # Clear metadata first (important for outputs)
     for cell in nb.cells:
         if cell.cell_type == 'code':
             cell.outputs = []      
-    write(nb, notebook_path)
+    nbformat.write(nb, notebook_path)
 
 
 # --- Assertions ---
@@ -174,6 +178,7 @@ for path in python_paths:
 
     if full_target.endswith('.ipynb'):
         clear_notebook_outputs(full_target)
+        clear_notebook_outputs(full_source)
 
 for path in folder_copy_paths:
     full_source = f'solutions/{path}'
@@ -185,3 +190,16 @@ for path in file_copy_paths:
     full_target = f'tutorials/{path}' 
     shutil.copyfile(full_source, full_target)
 
+def remove_overwrite_results_option(filename):
+    with open(filename, 'r') as f:
+        data = f.read()
+    data = re.sub(r"\s*,\s*overwrite_results\s*=\s*False\s*", "", data)
+    pattern = r"^\s*if\s+overwrite_results:\s*(?s:.*?)\n\s*\n"
+    data = re.sub(pattern, "", data, flags=re.MULTILINE)
+    with open(filename, 'w') as f:
+        f.write(data)
+
+
+control_save_to_remove = ['tutorials/evoformer/control_values/evoformer_checks.py']
+for control_save_remove in control_save_to_remove:
+    remove_overwrite_results_option(control_save_remove)

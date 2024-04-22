@@ -2,7 +2,7 @@
 
 ## Intro
 
-In this lession, we will give an Introduction to Tensors in PyTorch.
+In this lesson, we will give an Introduction to Tensors in PyTorch.
 Tensors are the fundamental building block that drives Machine Learning. 
 Now, you have probably worked with tensors before. Vectors for example are one dimensional tensors. Matrices are two-dimensional tensors. Operations like the dot-product between vectors, or matrix vector multiplication, are classic examples of operations on tensors.
 
@@ -58,7 +58,9 @@ and we wanted to access the elemt 3, we would index to it using A[1, 0]. As it i
 
 Slicing lets you extract specific portions of a tensor. Let's look at an example we'll meet again in AlphaFold:
 In the Structure Module, we will come across the need to represent transforms, 3D motions, which consist of a Rotation and a Translation. They are in the format of 4x4 matrices of the following form:
+
 $$ T = \left(\begin{array}{c|c} R & t \\\hline 0\;0\;0 & 1\end{array}\right), \; \tilde{x} = \begin{pmatrix}x\\\hline 1 \end{pmatrix}$$
+
 Here, $R$ is a 3x3 matrix, and $t$ is a 3-element vector. If we want to crop the 3x3 matrix from this transform, we would index it as 
 `R = T[0:3, 0:3]`, to specify that for the rows and columns, we want to go from index 0 (inclusive) to index 3 (exclusive). Starting at 0 is the default, so we could rewrite this as `R = T[:3, :3]`.
 For the translation, we want the first 3 rows, but only the fourth column. We can write this as `t = T[:3, 3]`. As the fourth row is the last row, we could also write this as `t = T[:3, -1]`, using negative indexing. With this syntax, t would be a one-dimensional tensor. But we might want to concatenate $R$ and $t$ again later into a 3x4 tensor. For this, R and t would need the same number of dimensions, R would be a 3x3 tensor and t a 3x1 tensor. For this, we could also use slicing in the following way: `t = T[:3, 3:4]`, or `t=T[:3, 3:]`, as going to the end is the default. This pattern of using one-element slices, like 3:4, is common to conserve one-dimensions.
