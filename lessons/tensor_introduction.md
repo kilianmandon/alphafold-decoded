@@ -59,7 +59,7 @@ and we wanted to access the elemt 3, we would index to it using A[1, 0]. As it i
 Slicing lets you extract specific portions of a tensor. Let's look at an example we'll meet again in AlphaFold:
 In the Structure Module, we will come across the need to represent transforms, 3D motions, which consist of a Rotation and a Translation. They are in the format of 4x4 matrices of the following form:
 
-$$ T = \left(\begin{array}{c|c} R & t \\\hline 0\;0\;0 & 1\end{array}\right), \; \tilde{x} = \begin{pmatrix}x\\\hline 1 \end{pmatrix}$$
+$$ T = \left(\begin{array}{c|c} R & t \\\ \hline 0\;0\;0 & 1\end{array}\right), \; \tilde{x} = \begin{pmatrix}x\\\ \hline 1 \end{pmatrix}$$
 
 Here, $R$ is a 3x3 matrix, and $t$ is a 3-element vector. If we want to crop the 3x3 matrix from this transform, we would index it as 
 `R = T[0:3, 0:3]`, to specify that for the rows and columns, we want to go from index 0 (inclusive) to index 3 (exclusive). Starting at 0 is the default, so we could rewrite this as `R = T[:3, :3]`.
