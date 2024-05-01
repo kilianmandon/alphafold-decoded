@@ -68,12 +68,16 @@ def parse_file(filename, out_name):
             else:
                 real_line = line
 
+            unescaped = real_line.replace('\\n', '\n')
+            if not any(char.isalnum() for char in unescaped):
+                return -1
+
             return len(real_line) - len(real_line.lstrip())
             
 
         for replace_start, replace_stop in reversed(to_replace_inds):
             leading_whitespace_code = np.array([calculate_leading_whitespace(a) for a in lines[replace_start:replace_stop]])
-            leading_whitespace_code = leading_whitespace_code[leading_whitespace_code != 1]
+            leading_whitespace_code = leading_whitespace_code[leading_whitespace_code != -1]
             if leading_whitespace_code.size == 0:
                 leading_whitespace_code = 0
             else:
@@ -106,6 +110,7 @@ python_paths = [
     'feature_embedding/recycling_embedder.py',
     'geometry/geometry.py',
     'geometry/geometry.ipynb',
+    'geometry/residue_constants.py',
 ]
 
 file_copy_paths = [

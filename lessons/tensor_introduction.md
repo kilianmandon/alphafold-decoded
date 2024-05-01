@@ -24,10 +24,10 @@ The second task is a little less obvious, and it's called Automatic Differentiat
 
 ## Tensor Creation
 
-So, now that we know what tensors are, let's create one. The simplest method for tensor creation is `torch.tensor`. It takes a nested list as an argument and creates a tensor of the same shape. Most of the time, you will use this syntax to create a vector or a matrix. This, for example, is a 4-element vector (torch.tensor([2.0, 1.45,-1.0, 0.0])). This would be a 3x2 matrix (torch.tensor([[1,2],[1,2],[3,4]])). You can see that the outer pair of brackets has three elements, while the inner ones have two each. This is why the tensor has shape (3, 2), and not (2, 3). You can use this syntax to create any shape of tensor. This for example, would be a 4x1 tensor. This concept of one-dimensions is really important. Even though this tensor has the same values as the one-dimensional vector we have seen earlier, it has significantly different properties when used in tensor operations. 
-There are some other important tensor creation routines, that we'll get to know better in the tutorials. `torch.linspace` for example is a method that is used very often. It creates evenly spaced values between a specified start and end. `torch.linspace(0, 2, steps=5)` for example would create the tensor [0, 0.5, 1, 1.5, 2]. Another important method is `torch.ones`, which takes a desired shape, and creates a tensor of this shape where every value is 1.0. You can scale this tensor to any other value. This line for example, creates a 4x3x4 tensor of 5s.
+So, now that we know what tensors are, let's create one. The simplest method for tensor creation is `torch.tensor`. It takes a nested list as an argument and creates a tensor of the same shape. Most of the time, you will use this syntax to create a vector or a matrix. This, for example, is a 4-element vector: `torch.tensor([2.0, 1.45,-1.0, 0.0])`. This would be a 3x2 matrix: `torch.tensor([[1,2],[1,2],[3,4]])`. You can see that the outer pair of brackets has three elements, while the inner ones have two each. This is why the tensor has shape (3, 2), and not (2, 3). You can use this syntax to create any shape of tensor. This for example, would be a 4x1 tensor: `torch.tensor([[2.0],[1.45],[-1.0],[0.0]])`. This concept of one-dimensions is really important. Even though this tensor has the same values as the one-dimensional vector we have seen earlier, it has significantly different properties when used in tensor operations. 
+There are some other important tensor creation routines, that we'll get to know better in the tutorials. `torch.linspace` for example is a method that is used very often. It creates evenly spaced values between a specified start and end. `torch.linspace(0, 2, steps=5)` for example would create the tensor `[0, 0.5, 1, 1.5, 2]`. Another important method is `torch.ones`, which takes a desired shape, and creates a tensor of this shape where every value is 1.0. You can scale this tensor to any other value. This line for example, creates a 4x3x4 tensor of 5s: `torch.ones((4,3,4)) * 5`
 
-Tensors support most basic operations, like + or minus, but also logical operations like >, < or ==. For example, the comparison of these two vectors returns the boolean tensor [True, False, True]. As we can see here, tensors can have different datatypes, like `long` for whole numbers, `float` for fractional numbers and `bool` for booleans. You can cast a tensor to a different type. We can cast our boolean vector back to floats for example, which would return [1.0, 0.0, 1.0].
+Tensors support most basic operations, like + or minus, but also logical operations like >, < or ==. For example, the comparison of these two vectors - `torch.tensor([3,5,1]) < torch.tensor([4, 5, 8])` - returns the boolean tensor [True, False, True]. As we can see here, tensors can have different datatypes, like `long` for whole numbers, `float` for fractional numbers and `bool` for booleans. You can cast a tensor to a different type. We can cast our boolean vector back to floats for example, which would return [1.0, 0.0, 1.0].
 
 ~ 2 Minutes
 
@@ -41,25 +41,25 @@ This generalizes to more than two dimensions: Let's say we have a batch of matri
 
 A proper understanding of this flattening process makes it easy to understand the concept of reshaping: Reshaping means going to the flattened version of a tensor, then changing the subdivision.
 Let's look at an example: 
-torch.tensor([[0, 1, 2], [3, 4, 5]])
+`torch.tensor([[0, 1, 2], [3, 4, 5]])`
 This is a 2x3 tensor. It's flattened version looks like this:
-[0, 1, 2, 3, 4, 5]
+`[0, 1, 2, 3, 4, 5]`
 If we are reshaping it shape 3x2 now, this means that we are only taking two elements for each row, so the rows are
-[0, 1], [2, 3,], [4, 5]
+`[0, 1], [2, 3,], [4, 5]`
 The full tensor now looks like this:
-[[0, 1], [2, 3], [4, 5]]
+`[[0, 1], [2, 3], [4, 5]]`
 This use of "Rearrangement Reshaping" is not the most common. More often, we will use reshape to flatten some dimensions, like reshaping (N, H, W) to (N, H*W), or for unflattening, which is just the reverse. Another common use-case for reshaping is adding 1-dimensions.
 
-~ 2:30 Min
+~ 2:30 Minutes
 
 Another fundamental task when working with tensors is *indexing* and *slicing*. Indexing is about accessing an element at a specific position in the tensor. If we have this matrix for example
-A = torch.tensor([[0,1,2],[3,4,5]])
-and we wanted to access the elemt 3, we would index to it using A[1, 0]. As it is in the second row (index 1) and first column (index 0). One thing to note is that when indexing elements in pytorch, you don't directly get the elements as numbers, but as one-element tensors. This is because PyTorch wants to keep track of values in it's specific format, for example to allow for automatic differentiation. If you want to access the actual value as a number, you will need to write this as A[1, 0].item()
+`A = torch.tensor([[0,1,2],[3,4,5]])`
+and we wanted to access the element 3, we would index to it using `A[1, 0]`, as it is in the second row (index 1) and first column (index 0). One thing to note is that when indexing elements in pytorch, you don't directly get the elements as numbers, but as one-element tensors. This is because PyTorch wants to keep track of values in it's specific format, for example to allow for automatic differentiation. If you want to access the actual value as a number, you will need to write this as `A[2, 0].item()`.
 
 Slicing lets you extract specific portions of a tensor. Let's look at an example we'll meet again in AlphaFold:
 In the Structure Module, we will come across the need to represent transforms, 3D motions, which consist of a Rotation and a Translation. They are in the format of 4x4 matrices of the following form:
 
-$`T = \left(\begin{array}{c|c} R & t \\ \hline 0\;0\;0 & 1\end{array}\right), \; \tilde{x} = \begin{pmatrix}x\\ \hline 1 \end{pmatrix}`$
+$$T = \left(\begin{array}{c|c} R & t \\ \hline 0\;0\;0 & 1\end{array}\right), \; \tilde{x} = \begin{pmatrix}x\\ \hline 1 \end{pmatrix}$$
 
 Here, $R$ is a 3x3 matrix, and $t$ is a 3-element vector. If we want to crop the 3x3 matrix from this transform, we would index it as 
 `R = T[0:3, 0:3]`, to specify that for the rows and columns, we want to go from index 0 (inclusive) to index 3 (exclusive). Starting at 0 is the default, so we could rewrite this as `R = T[:3, :3]`.
@@ -75,10 +75,10 @@ Left-hand side indexing works just as well: Let's say we have a 3x3 tensor `A`, 
 
 Here, we used left-hand side indexing to select the slice of `A` and assign new values to it. This also works with all other indexing techniques.
 
-~ 3:45
+~ 3:45 Minutes
 
 
------------ Part One -----------------------------
+----------- Part One -----------
 
 Topics for Part 2: Computations and reductions along axes, broadcasting, torch.einsum
 
@@ -96,7 +96,7 @@ It has three important properties:
 - If one value in the input is significantly larger than the others (say larger by ~6), the result will be close a one-hot vector where only this entry is 1 and the others are 0, since the exponential function boosts large values overproportionally strong
 - In comparison to a 'hard' max function that sets the largest value to 1 and all others to 0, it distributes the mass more smoothly if the large values are close to each other. 
 
-Even though the softmax function is no reduction, it needs a specified dimension, as it is a vector to vector calculation. Along the specified dimension, it will create values that sum up to one. Along the other dimensions, it doesn't have this property.
+Even though the softmax function is no reduction, it needs a specified dimension, as it is a vector-to-vector calculation. Along the specified dimension, it will create values that sum up to one. Along the other dimensions, it doesn't have this property.
 
 Another similar case where you need to think about axes is when concatenating or stacking tensors. Let's say you have three 4-element tensors `u`, `v`, and `w`. You can use `torch.stack` to stack them to a matrix. If you stack them as `torch.stack((u, v, w), dim=0)`, you will get a 3x4 matrix where the vectors are the individual rows. If you use `torch.stack((u, v, w), dim=1)` or `torch.stack((u, v, w), dim=-1)`, you will get a 4x3 matrix with the vectors as the individual column. The position of the newly introduced dimension 3 is given by `dim`. For `torch.stack`, all tensors to be stacked need to have the same shape, so that the resulting tensor has block form. The similar `torch.cat` doesn't introduce a new dimension but glues the tensors together along an existing dimension. We've mentioned before, when we extracted the 3x3 matrix `R` and the translation vector `t` from the 4x4 tensor `T`, that it is beneficial to extract `t` with slicing so that it has shape (3, 1) instead of (3,). This is practical here: If we wanted to concatenate `R` and `t` again, we can do so using `torch.cat((R, t), dim=-1)` since they have the same number of dimensions.
 

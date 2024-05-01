@@ -2,7 +2,8 @@ import torch
 from torch import nn
 
 from tests.structure_module.ipa import InvariantPointAttention
-from tests.structure_module.geometry import compute_all_atom_coordinates, precalculate_rigid_transforms, build_transform
+# from tests.structure_module.geometry import compute_all_atom_coordinates
+from geometry.geometry import compute_all_atom_coordinates, assemble_4x4_transform, quat_to_3x3_rotation
 from tests.structure_module import residue_constants
     
 
@@ -37,15 +38,16 @@ class BackboneUpdate(nn.Module):
         quat = quat / torch.linalg.vector_norm(quat, dim=-1, keepdim=True)
         t = group[..., 3:]
 
-        a, b, c, d = torch.unbind(quat, dim=-1)
-        R = [
-            [a**2+b**2-c**2-d**2, 2*b*c-2*a*d, 2*b*d+2*a*c],
-            [2*b*c+2*a*d, a**2-b**2+c**2-d**2, 2*c*d-2*a*b],
-            [2*b*d-2*a*c, 2*c*d+2*a*b, a**2-b**2-c**2+d**2]
-        ]
-        R = [torch.stack(vals, dim=-1) for vals in R]
-        R = torch.stack(R, dim=-2)
-        T = build_transform(R,  t)
+        # a, b, c, d = torch.unbind(quat, dim=-1)
+        # R = [
+        #     [a**2+b**2-c**2-d**2, 2*b*c-2*a*d, 2*b*d+2*a*c],
+        #     [2*b*c+2*a*d, a**2-b**2+c**2-d**2, 2*c*d-2*a*b],
+        #     [2*b*d-2*a*c, 2*c*d+2*a*b, a**2-b**2-c**2+d**2]
+        # ]
+        # R = [torch.stack(vals, dim=-1) for vals in R]
+        # R = torch.stack(R, dim=-2)
+        R = quat_to_3x3_rotation(quat)
+        T = assemble_4x4_transform(R,  t)
         return T
 
 class AngleResNetLayer(nn.Module):

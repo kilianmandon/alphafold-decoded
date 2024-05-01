@@ -6,6 +6,9 @@ __pycache__/
 openfold_params/
 data/
 
+lessons/html/*.html
+bunny_animation.mp4
+
 **/control_values/clusters_assigned.pt
 **/control_values/clusters_masked.pt
 **/control_values/clusters_selected.pt

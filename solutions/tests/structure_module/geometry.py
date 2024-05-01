@@ -1,5 +1,6 @@
 import torch
 from tests.structure_module.residue_constants import rigid_group_atom_positions, chi_angles_mask, atom_types, rigid_group_atom_position_map
+from geometry.geometry import precalculate_rigid_transforms
 
 chi_angle_chains = {
     'ALA': [],
