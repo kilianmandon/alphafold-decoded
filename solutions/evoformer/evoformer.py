@@ -14,8 +14,8 @@ class EvoformerBlock(nn.Module):
         """Initializes EvoformerBlock.
 
         Args:
-            c_m (int): Embedding dimension for the MSA feature.
-            c_z (int): Embedding dimension for the pair fetaure.
+            c_m (int): Embedding dimension for the MSA representation.
+            c_z (int): Embedding dimension for the pair representation.
         """
         super().__init__()
 
@@ -41,8 +41,8 @@ class EvoformerBlock(nn.Module):
         Implements the forward pass for one block in Algorithm 6.
 
         Args:
-            m (torch.tensor): MSA feature of shape (*, N_seq, N_res, c_m).
-            z (torch.tensor): Pair feature of shape (*, N_res, N_res, c_z).
+            m (torch.tensor): MSA representation of shape (*, N_seq, N_res, c_m).
+            z (torch.tensor): Pair representation of shape (*, N_res, N_res, c_z).
 
         Returns:
             tuple: Transformed tensors m and z of the same shape as the inputs.
@@ -76,8 +76,8 @@ class EvoformerStack(nn.Module):
         Initializes the EvoformerStack.
 
         Args:
-            c_m (int): Embedding dimension of the MSA feature.
-            c_z (int): Embedding dimension of the pair feature.
+            c_m (int): Embedding dimension of the MSA representation.
+            c_z (int): Embedding dimension of the pair representation.
             num_blocks (int): Number of blocks for the Evoformer.
             c_s (int, optional): Number of channels for the single representation. 
                 Defaults to 384.
@@ -101,8 +101,8 @@ class EvoformerStack(nn.Module):
         Implements the forward pass for Algorithm 6.
 
         Args:
-            m (torch.tensor): MSA feature of shape (*, N_seq, N_res, c_m).
-            z (torch.tensor): Pair feature of shape (*, N_res, N_res, c_z).
+            m (torch.tensor): MSA representation of shape (*, N_seq, N_res, c_m).
+            z (torch.tensor): Pair representation of shape (*, N_res, N_res, c_z).
 
         Returns:
             tuple: Output tensors m, z, and s, where m and z have the same shape
@@ -114,7 +114,7 @@ class EvoformerStack(nn.Module):
         ##########################################################################
         # TODO: Implement  the forward pass for Algorithm 6.                     #
         #   The single representation is created by embedding the first row      #
-        #   of the msa feature.                                                  #
+        #   of the msa representation.                                           #
         ##########################################################################
 
         for evo_block in self.blocks:

@@ -12,7 +12,7 @@ class TriangleMultiplication(nn.Module):
         """Initialization of TriangleMultiplication.
 
         Args:
-            c_z (int): Embedding dimension of the pair feature.
+            c_z (int): Embedding dimension of the pair representation.
             mult_type (str): Either 'outgoing' for Algorithm 11 or 'incoming' for Algorithm 12.
             c (int, optional): Embedding dimension . Defaults to 128.
 
@@ -53,7 +53,7 @@ class TriangleMultiplication(nn.Module):
         on if mult_type is set to 'outgoing' or 'incoming'.
 
         Args:
-            z (torch.tensor): Pair feature of shape (*, N_res, N_res, c_z).
+            z (torch.tensor): Pair representation of shape (*, N_res, N_res, c_z).
 
         Returns:
             torch.tensor: Output tensor of the  same shape as z.
@@ -96,7 +96,7 @@ class TriangleAttention(nn.Module):
         Initialization of TriangleAttention.
 
         Args:
-            c_z (int): Embedding dimension of the pair feature.
+            c_z (int): Embedding dimension of the pair representation.
             node_type (str): Either 'starting_node' for Algorithm 13 or 'ending_node' for Algorithm 14.
             c (int, optional): Embedding dimension for multi-head attention. Defaults to 32.
             N_head (int, optional): Number of heads for multi-head attention. Defaults to 4.
@@ -139,7 +139,7 @@ class TriangleAttention(nn.Module):
         if node_type is set to 'starting_node' or 'ending_node'.
 
         Args:
-            z (torch.tensor): Pair feature of shape (*, N_res, N_res, c_z).
+            z (torch.tensor): Pair representation of shape (*, N_res, N_res, c_z).
 
         Returns:
             torch.tensor: Output tensor of the same shape as z.
@@ -181,7 +181,7 @@ class PairTransition(nn.Module):
         Initializes the PairTransition.
 
         Args:
-            c_z (int): Embedding dimension of the pair feature.
+            c_z (int): Embedding dimension of the pair representation.
             n (int, optional): Factor by which the number of intermediate channels 
                 expands the original number of channels. 
                 Defaults to 4.
@@ -206,7 +206,7 @@ class PairTransition(nn.Module):
         Forward pass for Algorithm 15.
 
         Args:
-            z (torch.tensor): Pair feature of shape (*, N_res, N_res, c_z).
+            z (torch.tensor): Pair representation of shape (*, N_res, N_res, c_z).
 
         Returns:
             torch.tensor: Output tensor of the same shape as z.
@@ -239,7 +239,7 @@ class PairStack(nn.Module):
         Initializes the PairStack.
 
         Args:
-            c_z (int): Embedding dimension of the pair feature.
+            c_z (int): Embedding dimension of the pair representation.
         """
         super().__init__()
 
@@ -266,7 +266,7 @@ class PairStack(nn.Module):
         Implements the forward pass for the pair stack from Algorithm 6.
 
         Args:
-            z (torch.tensor): Pair feature of shape (*, N_res, N_res, c_z).
+            z (torch.tensor): Pair representation of shape (*, N_res, N_res, c_z).
 
         Returns:
             torch.tensor: Output tensor of the same shape as z.

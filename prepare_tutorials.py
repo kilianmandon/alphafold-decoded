@@ -105,6 +105,7 @@ python_paths = [
     'evoformer/pair_stack.py',
     'evoformer/evoformer.py',
     'evoformer/evoformer.ipynb',
+    'feature_embedding/feature_embedding.ipynb',
     'feature_embedding/extra_msa_stack.py',
     'feature_embedding/input_embedder.py',
     'feature_embedding/recycling_embedder.py',
@@ -125,6 +126,7 @@ folder_copy_paths = [
     'evoformer/control_values',
     'evoformer/images',
     'feature_embedding/control_values',
+    'feature_embedding/images',
     'geometry/control_values',
 ]
 
@@ -199,12 +201,13 @@ def remove_overwrite_results_option(filename):
     with open(filename, 'r') as f:
         data = f.read()
     data = re.sub(r"\s*,\s*overwrite_results\s*=\s*False\s*", "", data)
+    data = re.sub(r"\s*,\s*overwrite_results\s*=\s*overwrite_results\s*", "", data)
     pattern = r"^\s*if\s+overwrite_results:\s*(?s:.*?)\n\s*\n"
     data = re.sub(pattern, "", data, flags=re.MULTILINE)
     with open(filename, 'w') as f:
         f.write(data)
 
 
-control_save_to_remove = ['tutorials/evoformer/control_values/evoformer_checks.py']
+control_save_to_remove = ['tutorials/evoformer/control_values/evoformer_checks.py', 'tutorials/feature_embedding/control_values/embedding_checks.py']
 for control_save_remove in control_save_to_remove:
     remove_overwrite_results_option(control_save_remove)

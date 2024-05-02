@@ -67,8 +67,8 @@ class MSAColumnGlobalAttention(nn.Module):
         Initializes MSAColumnGlobalAttention.
 
         Args:
-            c_m (int): Embedding dimension of the MSA feature.
-            c_z (int): Embedding dimension of the pair feature.
+            c_m (int): Embedding dimension of the MSA representation.
+            c_z (int): Embedding dimension of the pair representation.
             c (int, optional): Embedding dimension for MultiHeadAttention. Defaults to 8.
             N_head (int, optional): Number of heads for MultiHeadAttention. Defaults to 8.
         """
@@ -93,7 +93,7 @@ class MSAColumnGlobalAttention(nn.Module):
         Implements the forward pass for Algorithm 19.
 
         Args:
-            m (torch.tensor): MSA feature of shape (*, N_seq, N_res, c_m).
+            m (torch.tensor): MSA representation of shape (*, N_seq, N_res, c_m).
 
         Returns:
             torch.tensor: Output tensor of the same shape as m.
@@ -120,13 +120,13 @@ class ExtraMsaBlock(nn.Module):
     Implements one block for Algorithm 18.
     """
     
-    def __init__(self, c_m, c_z):
+    def __init__(self, c_e, c_z):
         """
         Initializes ExtraMSABlock.
 
         Args:
-            c_m (int): Embedding dimension of the MSA feature.
-            c_z (int): Embedding dimension of the pair feature.
+            c_e (int): Embedding dimension of the extra MSA representation.
+            c_z (int): Embedding dimension of the pair representation.
         """
         super().__init__()
 
@@ -139,10 +139,10 @@ class ExtraMsaBlock(nn.Module):
         ##########################################################################
 
         self.dropout_rowwise = DropoutRowwise(p=0.15)
-        self.msa_att_row = MSARowAttentionWithPairBias(c_m, c_z, c=8)
-        self.msa_att_col = MSAColumnGlobalAttention(c_m, c_z)
-        self.msa_transition = MSATransition(c_m)
-        self.outer_product_mean = OuterProductMean(c_m, c_z)
+        self.msa_att_row = MSARowAttentionWithPairBias(c_e, c_z, c=8)
+        self.msa_att_col = MSAColumnGlobalAttention(c_e, c_z)
+        self.msa_transition = MSATransition(c_e)
+        self.outer_product_mean = OuterProductMean(c_e, c_z)
         self.core = PairStack(c_z)
 
         ##########################################################################
@@ -154,8 +154,8 @@ class ExtraMsaBlock(nn.Module):
         Forward pass for Algorithm 18.
 
         Args:
-            e (torch.tensor): Extra MSA feature of shape (*, N_extra, N_res, c_e).
-            z (torch.tensor): Pair feature of shape (*, N_res, N_res, c_z).
+            e (torch.tensor): Extra MSA representation of shape (*, N_extra, N_res, c_e).
+            z (torch.tensor): Pair representation of shape (*, N_res, N_res, c_z).
 
         Returns:
             tuple: Tuple consisting of the transformed features e and z.
@@ -191,8 +191,8 @@ class ExtraMsaStack(nn.Module):
         Initializes the ExtraMSAStack.
 
         Args:
-            c_e (int): Embedding dimension of the extra MSA feature.
-            c_z (int): Embedding dimension of the pair feature.
+            c_e (int): Embedding dimension of the extra MSA representation.
+            c_z (int): Embedding dimension of the pair representation.
             num_blocks (int): Number of blocks in the ExtraMSAStack.
         """
         super().__init__()
@@ -212,8 +212,8 @@ class ExtraMsaStack(nn.Module):
         Implements the forward pass for Algorithm 18.
 
         Args:
-            e (torch.tensor): Extra MSA feature of shape (*, N_extra, N_res, c_e).
-            z (torch.tensor): Pair feature of shape (*, N_res, N_res, c_z).
+            e (torch.tensor): Extra MSA representation of shape (*, N_extra, N_res, c_e).
+            z (torch.tensor): Pair representation of shape (*, N_res, N_res, c_z).
 
         Returns:
             torch.tensor: Output tensor of the same shape as z.

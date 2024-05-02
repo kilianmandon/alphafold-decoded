@@ -11,8 +11,8 @@ class MSARowAttentionWithPairBias(nn.Module):
         Initializes MSARowAttentionWithPairBias.
 
         Args:
-            c_m (int): Embedding dimension of the msa feature.
-            c_z (int): Embedding dimension of the pair feature.
+            c_m (int): Embedding dimension of the msa representation.
+            c_z (int): Embedding dimension of the pair representation.
             c (int, optional): Embedding dimension for multi-head attention. Defaults to 32.
             N_head (int, optional): Number of heads for multi-head attention. Defaults to 8.
         """
@@ -39,8 +39,8 @@ class MSARowAttentionWithPairBias(nn.Module):
         Implements the forward pass according to Algorithm 7.
 
         Args:
-            m (torch.tensor): MSA feature of shape (*, N_seq, N_res, c_m).
-            z (torch.tensor): Pair feature of shape (*, N_res, N_res, c_z).
+            m (torch.tensor): MSA representation of shape (*, N_seq, N_res, c_m).
+            z (torch.tensor): Pair representation of shape (*, N_res, N_res, c_z).
 
         Returns:
             torch.tensor: Output tensor of the same shape as m.
@@ -72,7 +72,7 @@ class MSAColumnAttention(nn.Module):
         Initializes MSAColumnAttention.
 
         Args:
-            c_m (int): Embedding dimension of the msa feature.
+            c_m (int): Embedding dimension of the MSA representation.
             c (int, optional): Embedding dimension for multi-head attention. Defaults to 32.
             N_head (int, optional): Number of heads for multi-head attention. Defaults to 8.
         """
@@ -94,7 +94,7 @@ class MSAColumnAttention(nn.Module):
         Implements the forward pass according to algorithm Algorithm 8.
 
         Args:
-            m (torch.tensor): MSA feature of shape (N_seq, N_res, c_m).
+            m (torch.tensor): MSA representation of shape (N_seq, N_res, c_m).
 
         Returns:
             torch.tensor: Output tensor of the same shape as m.
@@ -125,7 +125,7 @@ class MSATransition(nn.Module):
         Initializes MSATransition.
 
         Args:
-            c_m (int): Embedding dimension of the MSA feature.
+            c_m (int): Embedding dimension of the MSA representation.
             n (int, optional): Factor for the number of channels in the intermediate dimension. 
              Defaults to 4.
         """
@@ -180,8 +180,8 @@ class OuterProductMean(nn.Module):
         Initializes OuterProductMean.
 
         Args:
-            c_m (int): Embedding dimension of the MSA feature.
-            c_z (int): Embedding dimension of the pair feature. 
+            c_m (int): Embedding dimension of the MSA representation.
+            c_z (int): Embedding dimension of the pair representation. 
             c (int, optional): Embedding dimension of a and b from Algorithm 10. 
                 Defaults to 32.
         """
