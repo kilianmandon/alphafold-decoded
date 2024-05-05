@@ -183,7 +183,8 @@ def quat_to_3x3_rotation(q):
     ##########################################################################
 
     batch_shape = q.shape[:-1]
-    eye = torch.eye(3).broadcast_to(batch_shape+(3,3)).to(q.device)
+    eye = torch.eye(3, dtype=q.dtype, device=q.device)
+    eye = eye.broadcast_to(batch_shape+(3,3))
     e1 = quat_vector_mul(q, eye[...,0])
     e2 = quat_vector_mul(q, eye[...,1])
     e3 = quat_vector_mul(q, eye[...,2])
@@ -229,6 +230,40 @@ def assemble_4x4_transform(R, t):
     ##########################################################################
 
     return T
+
+def warp_3d_point(T, x):
+    """
+    Warps a 3D point through a homogenous 4x4 transform. This means promoting the
+    point to homogenous coordinates by padding with 1, multiplying it against the
+    4x4 matrix T, then cropping the first three coordinates.
+
+    Args:
+        T (torch.tensor): Homogenous 4x4 transform of shape (*, 4, 4).
+        x (torch.tensor): 3D points of shape (*, 3).
+
+    Returns:
+        torch.tensor: Warped points of shape (*, 3).
+    """
+
+    x_warped = None
+    device = x.device
+    dtype = x.dtype
+
+    ##########################################################################
+    # TODO: Implement the method according to the method description.        #
+    ##########################################################################
+
+    pad = torch.ones(x.shape[:-1] + (1,), device=device, dtype=dtype)
+    x_padded = torch.cat((x, pad), dim=-1)
+    x_warped = torch.einsum('...ij,...j->...i', T, x_padded)
+    x_warped = x_warped[..., :3]
+
+    ##########################################################################
+    #               END OF YOUR CODE                                         #
+    ##########################################################################
+
+    return x_warped
+    
     
 
 def create_4x4_transform(ex, ey, translation):
@@ -310,6 +345,8 @@ def makeRotX(phi):
     """
 
     batch_shape = phi.shape[:-1]
+    device = phi.device
+    dtype = phi.dtype
     phi1, phi2 = torch.unbind(phi, dim=-1)
     T = None
 
@@ -318,14 +355,14 @@ def makeRotX(phi):
     #   with a translation of 0 to a 4x4 transformation.                     #
     ##########################################################################
 
-    R = torch.zeros(batch_shape+(3,3), device=phi.device)
+    R = torch.zeros(batch_shape+(3,3), device=device, dtype=dtype)
     R[..., 0, 0] = 1
     R[..., 1, 1] = phi1
     R[..., 2, 1] = phi2
     R[..., 1, 2] = -phi2
     R[..., 2, 2] = phi1
 
-    t = torch.zeros(batch_shape+(3,), device=phi.device)
+    t = torch.zeros(batch_shape+(3,), device=device, dtype=dtype)
     T = assemble_4x4_transform(R, t)
 
     ##########################################################################
@@ -533,6 +570,8 @@ def compute_global_transforms(T, alpha, F):
     """
 
     global_transforms = None
+    device = T.device
+    dtype = T.dtype
 
     ##########################################################################
     # TODO: Construct the global transforms, according to line 1 - line 10   #
@@ -559,20 +598,20 @@ def compute_global_transforms(T, alpha, F):
     alpha = alpha / torch.linalg.vector_norm(alpha, dim=-1, keepdim=True)
     omega, phi, psi, chi1, chi2, chi3, chi4 = torch.unbind(alpha, dim=-2)
 
-    all_rigid_transforms = precalculate_rigid_transforms().to(alpha.device)
+    all_rigid_transforms = precalculate_rigid_transforms().to(dtype=dtype, device=device)
 
     local_transforms = all_rigid_transforms[F]
     global_transforms = torch.zeros_like(local_transforms)
 
-    global_transforms[:, 0] = T
+    global_transforms[..., 0, :, :] = T
 
     for i, ang in zip(range(1, 5), [omega, phi, psi, chi1]):
-        global_transforms[:, i] = \
-            T @ local_transforms[:, i] @ makeRotX(ang)
+        global_transforms[..., i, :, :] = \
+            T @ local_transforms[..., i, :, :] @ makeRotX(ang)
 
     for i, ang in zip(range(5, 8), [chi2, chi3, chi4]):
-        global_transforms[:, i] = \
-            global_transforms[:, i-1] @ local_transforms[:, i] @ makeRotX(ang)
+        global_transforms[..., i, :, :] = \
+            global_transforms[..., i-1, :, :] @ local_transforms[..., i, :, :] @ makeRotX(ang)
 
     ##########################################################################
     #               END OF YOUR CODE                                         #
@@ -601,6 +640,8 @@ def compute_all_atom_coordinates(T, alpha, F):
     """
 
     global_positions, atom_mask = None, None
+    device = T.device
+    dtype = T.dtype
 
     ##########################################################################
     # TODO: Implement Algorithm 24. You can follow these steps:              # 
@@ -624,18 +665,24 @@ def compute_all_atom_coordinates(T, alpha, F):
 
     global_transforms = compute_global_transforms(T, alpha, F)
 
-    atom_local_positions = residue_constants.atom_local_positions.to(alpha.device)
-    atom_frame_inds = residue_constants.atom_frame_inds.to(alpha.device)
+    atom_local_positions = residue_constants.atom_local_positions.to(device=device,dtype=dtype)
+    atom_frame_inds = residue_constants.atom_frame_inds.to(device=device)
 
     atom_local_positions = atom_local_positions[F]
     atom_frame_inds = atom_frame_inds[F]
 
-    seq_ind = torch.arange(atom_frame_inds.shape[0]).unsqueeze(-1)
-    seq_ind = seq_ind.broadcast_to(atom_frame_inds.shape)
+    # Non-batched, array indexing:
+    # seq_ind = torch.arange(atom_frame_inds.shape[0]).unsqueeze(-1)
+    # seq_ind = seq_ind.broadcast_to(atom_frame_inds.shape)
+    # atom_frames = global_transforms[seq_ind, atom_frame_inds]
 
-    atom_frames = global_transforms[seq_ind, atom_frame_inds]
+    # Batched, torch.gather:
+    dim_diff = global_transforms.ndim - atom_frame_inds.ndim
+    atom_frame_inds = atom_frame_inds.reshape(atom_frame_inds.shape + (1,) * dim_diff)
+    atom_frame_inds = atom_frame_inds.broadcast_to(atom_frame_inds.shape[:-dim_diff] + global_transforms.shape[-dim_diff:])
+    atom_frames = torch.gather(global_transforms, dim=-3, index=atom_frame_inds)
 
-    position_pad = torch.ones(atom_local_positions.shape[:-1]+(1,), device=alpha.device)
+    position_pad = torch.ones(atom_local_positions.shape[:-1]+(1,), device=device, dtype=dtype)
     padded_local_positions = torch.cat((atom_local_positions, position_pad), dim=-1)
 
     global_positions_padded = torch.einsum('...ijk,...ik->...ij', atom_frames, padded_local_positions)

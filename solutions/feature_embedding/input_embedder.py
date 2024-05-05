@@ -56,6 +56,7 @@ class InputEmbedder(nn.Module):
         """
 
         out = None
+        dtype = self.linear_relpos.weight.dtype
 
         ##########################################################################
         # TODO: Implement Algorithm 4. Since the residue index is just a number, #
@@ -75,7 +76,7 @@ class InputEmbedder(nn.Module):
         residue_index = residue_index.long()
         d = residue_index.unsqueeze(-1) - residue_index.unsqueeze(-2)
         d = torch.clamp(d, -self.vbins, self.vbins) + self.vbins
-        d_onehot = nn.functional.one_hot(d, num_classes=2*self.vbins+1).float()
+        d_onehot = nn.functional.one_hot(d, num_classes=2*self.vbins+1).to(dtype=dtype)
         out = self.linear_relpos(d_onehot)
 
         ##########################################################################

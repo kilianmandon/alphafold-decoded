@@ -186,7 +186,7 @@ def create_features_from_a3m (O0OOO0O0O00O0OOO0 ,seed =None ):#line:641
         OOO00O0OOOO00OO0O =O00O0OOOO00O0O00O (OOO00O0OOOO00OO0O )#line:705
     O0OO00O000O0O00O0 =calculate_msa_feat (OOO00O0OOOO00OO0O )#line:707
     OO0O0OO0O0O0OO0OO =calculate_extra_msa_feat (OOO00O0OOOO00OO0O )#line:708
-    OO0O0000OOOO0O000 =onehot_encode_aa_type (O0O00OOO0OOOO0O00 [0 ],include_gap_token =False )#line:712
+    OO0O0000OOOO0O000 =onehot_encode_aa_type (O0O00OOO0OOOO0O00 [0 ],include_gap_token =False ).float()#line:712
     OO000OOOOO0O0OO0O =torch .arange (len (O0O00OOO0OOOO0O00 [0 ]))#line:713
     return {'msa_feat':O0OO00O000O0O00O0 ,'extra_msa_feat':OO0O0OO0O0O0OO0OO ,'target_feat':OO0O0000OOOO0O000 ,'residue_index':OO000OOOOO0O0OO0O }#line:724
 def create_control_values (O0O00OOO00O000O00 ):#line:726

@@ -1,7 +1,8 @@
 import torch
 from torch import nn
 
-from tests.structure_module.ipa import InvariantPointAttention
+# from tests.structure_module.ipa import InvariantPointAttention
+from structure_module.ipa import InvariantPointAttention
 # from tests.structure_module.geometry import compute_all_atom_coordinates
 from geometry.geometry import compute_all_atom_coordinates, assemble_4x4_transform, quat_to_3x3_rotation
 from tests.structure_module import residue_constants

@@ -112,10 +112,17 @@ python_paths = [
     'geometry/geometry.py',
     'geometry/geometry.ipynb',
     'geometry/residue_constants.py',
+    'structure_module/ipa.py',
+    'structure_module/structure_module.py',
+    'structure_module/structure_module.ipynb',
+    'model/utils.py',
+    'model/model.py',
+    'model/model.ipynb',
 ]
 
 file_copy_paths = [
-    'feature_extraction/alignment_tautomerase.a3m'
+    'feature_extraction/alignment_tautomerase.a3m',
+    'model/download_openfold_params.sh',
 ]
 
 folder_copy_paths = [
@@ -128,6 +135,8 @@ folder_copy_paths = [
     'feature_embedding/control_values',
     'feature_embedding/images',
     'geometry/control_values',
+    'structure_module/control_values',
+    'model/control_values',
 ]
 
 import glob
@@ -208,6 +217,11 @@ def remove_overwrite_results_option(filename):
         f.write(data)
 
 
-control_save_to_remove = ['tutorials/evoformer/control_values/evoformer_checks.py', 'tutorials/feature_embedding/control_values/embedding_checks.py']
+control_save_to_remove = [
+    'tutorials/evoformer/control_values/evoformer_checks.py', 
+    'tutorials/feature_embedding/control_values/embedding_checks.py',
+    'tutorials/structure_module/control_values/structure_module_checks.py',
+    'tutorials/model/control_values/model_checks.py',
+]
 for control_save_remove in control_save_to_remove:
     remove_overwrite_results_option(control_save_remove)

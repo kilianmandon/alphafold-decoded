@@ -1,4 +1,4 @@
-current_implementation/content_planning/
+current_implementation
 .vscode
 out_dir/
 test_outputs/
@@ -7,6 +7,7 @@ openfold_params/
 data/
 
 lessons/html/*.html
+prediction.mmcif
 bunny_animation.mp4
 
 **/control_values/clusters_assigned.pt

@@ -712,7 +712,7 @@ def create_features_from_a3m(file_name, seed=None):
 
     # Note: In the official openfold implementation, the one-hot encoding
     # is padded with zeroes for compatibility with domain datasets for the target_feat
-    target_feat = onehot_encode_aa_type(seqs[0], include_gap_token=False)
+    target_feat = onehot_encode_aa_type(seqs[0], include_gap_token=False).float()
     residue_index = torch.arange(len(seqs[0]))
 
     ##########################################################################

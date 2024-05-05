@@ -211,6 +211,38 @@ def assemble_4x4_transform(R, t):
     ##########################################################################
 
     return T
+
+def warp_3d_point(T, x):
+    """
+    Warps a 3D point through a homogenous 4x4 transform. This means promoting the
+    point to homogenous coordinates by padding with 1, multiplying it against the
+    4x4 matrix T, then cropping the first three coordinates.
+
+    Args:
+        T (torch.tensor): Homogenous 4x4 transform of shape (*, 4, 4).
+        x (torch.tensor): 3D points of shape (*, 3).
+
+    Returns:
+        torch.tensor: Warped points of shape (*, 3).
+    """
+
+    x_warped = None
+    device = x.device
+    dtype = x.dtype
+
+    ##########################################################################
+    # TODO: Implement the method according to the method description.        #
+    ##########################################################################
+
+    # Replace "pass" statement with your code
+    pass
+
+    ##########################################################################
+    #               END OF YOUR CODE                                         #
+    ##########################################################################
+
+    return x_warped
+    
     
 
 def create_4x4_transform(ex, ey, translation):
@@ -289,6 +321,8 @@ def makeRotX(phi):
     """
 
     batch_shape = phi.shape[:-1]
+    device = phi.device
+    dtype = phi.dtype
     phi1, phi2 = torch.unbind(phi, dim=-1)
     T = None
 
@@ -457,6 +491,8 @@ def compute_global_transforms(T, alpha, F):
     """
 
     global_transforms = None
+    device = T.device
+    dtype = T.dtype
 
     ##########################################################################
     # TODO: Construct the global transforms, according to line 1 - line 10   #
@@ -510,6 +546,8 @@ def compute_all_atom_coordinates(T, alpha, F):
     """
 
     global_positions, atom_mask = None, None
+    device = T.device
+    dtype = T.dtype
 
     ##########################################################################
     # TODO: Implement Algorithm 24. You can follow these steps:              # 

@@ -3,13 +3,15 @@ channels:
   - nvidia
   - pytorch  # Add the PyTorch channel
   - defaults
+  - conda-forge
 dependencies:
   - python=3.9
   - pytorch::pytorch
   - torchvision
   - matplotlib
   - ipykernel
-  - ipywidgets
-  - ipympl
+  - modelcif
   - pip 
-
+  - ffmpeg
+  - py3dmol
+  - nbformat

@@ -53,6 +53,7 @@ class InputEmbedder(nn.Module):
         """
 
         out = None
+        dtype = self.linear_relpos.weight.dtype
 
         ##########################################################################
         # TODO: Implement Algorithm 4. Since the residue index is just a number, #

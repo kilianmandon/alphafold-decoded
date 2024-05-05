@@ -35,6 +35,8 @@ test_inputs = {
     for key, shape in feature_shapes.items()
 }
 
+test_inputs['residue_index'] = torch.arange(N_res)
+
 test_inputs['batch'] = {
         'msa_feat': test_inputs['msa_feat'],
         'target_feat': test_inputs['target_feat'],
@@ -42,7 +44,6 @@ test_inputs['batch'] = {
         'extra_msa_feat': test_inputs['extra_msa_feat'],
 }
 
-test_inputs['residue_index'] = torch.arange(N_res)
 
 
 def test_module_shape(module, test_name, control_folder):
