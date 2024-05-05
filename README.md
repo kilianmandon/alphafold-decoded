@@ -12,8 +12,7 @@ AlphaFold revolutionized the field of protein structure prediction. This project
 
 ## Folder Structure
 
-* **current_implementation:** Contains the initial work-in-progress code base for the AlphaFold implementation.
-* **tutorials:** Will house Jupyter Notebooks or Python files containing interactive exercises designed to guide users through implementing AlphaFold components. These exercises will be populated by reformatting and adapting content from the `current_implementation` folder. 
+* **tutorials:** Will house Jupyter Notebooks and Python files containing interactive exercises designed to guide users through implementing AlphaFold components. These exercises will be populated by reformatting and adapting content from the `current_implementation` folder. 
 * **solutions:** Provides solutions to the coding exercises.  
 
 ## Setup Instructions
@@ -83,8 +82,10 @@ The tutorials should be completed in the following order:
 2. Machine Learning Introduction
 3. Attention
 4. Feature Extraction
-5. Evoformer (work in progress)
-6. Geometry (work in progress)
-7. Structure Module (work in progress)
+5. Evoformer
+6. Feature Embedding
+7. Geometry
+8. Structure Module
+9. Model
 
 If you are already familiar with tensors and machine learning, feel free to start at Attention.
