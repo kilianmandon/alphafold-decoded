@@ -32,7 +32,8 @@ def transform_html(file_path):
     text = re.sub(r'<h1', '<h1 class="lesson-heading"', text)
     text = re.sub(r'<h2', '<h2 class="lesson-sub-heading"', text)
     text = re.sub(r'<li ', '<li class="lesson-li" ', text)
-    text = re.sub(r'<p', '<p class="lesson-paragraph"', text)
+    text = re.sub(r'<p ', '<p class="lesson-paragraph" ', text)
+    text = re.sub(r'<a ', '<a class="lesson-link" ', text)
 
     # text = re.sub(r'<a', '<a class="lesson-link"', text)
 
@@ -49,6 +50,6 @@ def transform_html(file_path):
  
 # Example usage
 
-file_path = "lessons/html/tensor_introduction.html"  # Replace with the path to your file
+file_path = "lessons/html/machine_learning.html"  # Replace with the path to your file
 
 transform_html(file_path)
