@@ -13,21 +13,33 @@ def is_valid_html(html_string):
     """
 
     # Tags that must be closed
-    p_open = [m.start() for m in re.finditer('<p', html_string)]
-    p_close = [m.start() for m in re.finditer('</p>', html_string)]
-    stack = []
-    while p_open or p_close:
-        if p_open and (not p_close or p_open[0] < p_close[0]):
-            stack.append('')
-            p_open.pop(0)
-        else:
-            if len(stack) == 0:
-                return False
-            else:
-                stack.pop(0)
-                p_close.pop(0)
+    # p_open = [m.start() for m in re.finditer(r'<p[^/>]*>', html_string)]
+    # p_close = [m.start() for m in re.finditer('</p>', html_string)]
+    tags_to_check = ['p', 'section']
+    for tag in tags_to_check:
+        tag_open, tag_close = find_html_tags(html_string, tag)
 
-    return len(stack) == 0 and len(p_open) == 0 and len(p_close) == 0
+        stack = []
+        while tag_open or tag_close:
+            if tag_open and (not tag_close or tag_open[0] < tag_close[0]):
+                stack.append('')
+                tag_open.pop(0)
+            else:
+                if len(stack) == 0:
+                    return False
+                else:
+                    stack.pop(0)
+                    tag_close.pop(0)
+        if len(stack) != 0 or len(tag_open) != 0 or len(tag_close) != 0:
+            return False
+
+    return True
+
+def find_html_tags(text, tag):
+    tag_open = [m.start() for m in re.finditer(f'<{tag}[^/>]*>', text)]
+    tag_close = [m.start() for m in re.finditer(f'</{tag}>', text)]
+    return tag_open, tag_close
+    
 
 def group_lines(lines):
     all_groups = []
@@ -37,6 +49,15 @@ def group_lines(lines):
         if is_valid_html(''.join(current_group)):
             all_groups.append(''.join(current_group))
             current_group = []
+
+    if current_group:
+        rest = ''.join(current_group)
+        print(f'Overhanging group of length {len(rest)}')
+        p_open = [m.start() for m in re.finditer(r'<p[^/>]*>', rest)]
+        p_close = [m.start() for m in re.finditer('</p>', rest)]
+        print(len(p_open), len(p_close))
+        with open('lessons/html/problematic_group.txt', 'w') as f:
+            f.write(rest)
 
     return all_groups
 
@@ -87,6 +108,7 @@ def split_text_by_characters(file_path, max_chunk_size=9000):
 
     # Save chunks to files
 
+    print(f'Number of chunks: {len(chunks)}')
     for i, chunk in enumerate(chunks):
 
         output_path = Path(file_path).parents[0] / f"chunk_{i+1}.html"
@@ -100,6 +122,6 @@ def split_text_by_characters(file_path, max_chunk_size=9000):
 # Example usage
 
 # Replace with your file path
-file_path = "lessons/html/tensor_introduction.html_css_classes.html"
+file_path = "lessons/html/machine_learning_css_classes.html"
 
 split_text_by_characters(file_path)

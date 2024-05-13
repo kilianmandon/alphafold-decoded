@@ -25,6 +25,9 @@ def transform_html(file_path):
 
     # text = re.sub(r'<h2 class=".*?"', '<h2 class="lesson-sub-heading"', text)
 
+    if 'lesson-code' in text or 'lesson-heading' in text or 'lesson-paragraph' in text:
+        raise ValueError(f'File {file_path} was already converted.')
+
     text = re.sub(r'<code>', '<code class="lesson-code">', text)
     text = re.sub(r'<h1', '<h1 class="lesson-heading"', text)
     text = re.sub(r'<h2', '<h2 class="lesson-sub-heading"', text)
@@ -37,9 +40,9 @@ def transform_html(file_path):
 
     
     file_path = Path(file_path)
-    out_file = file_path.with_name(file_path.name+'_css_classes.html')
+    # out_file = file_path.with_name(file_path.stem+'_css_classes.html')
     
-    with open(out_file, 'w', encoding='utf-8') as file:
+    with open(file_path, 'w', encoding='utf-8') as file:
 
         file.write(text)
  

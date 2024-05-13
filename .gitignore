@@ -6,7 +6,6 @@ __pycache__/
 openfold_params/
 data/
 
-lessons/html/*.html
 prediction.mmcif
 bunny_animation.mp4
 
