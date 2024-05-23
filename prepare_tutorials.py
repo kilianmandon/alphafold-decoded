@@ -94,8 +94,8 @@ def parse_file(filename, out_name):
 
 python_paths = [
     'tensor_introduction/tensor_introduction.ipynb',
-    'machine_learning_introduction/machine_learning_introduction.ipynb',
-    'machine_learning_introduction/feed_forward.py',
+    'machine_learning/machine_learning.ipynb',
+    'machine_learning/feed_forward.py',
     'attention/attention.ipynb',
     'attention/mha.py',
     'feature_extraction/feature_extraction.py',
@@ -127,7 +127,7 @@ file_copy_paths = [
 
 folder_copy_paths = [
     'tensor_introduction/control_values',
-    'machine_learning_introduction/control_values',
+    'machine_learning/control_values',
     'attention/control_values',
     'feature_extraction/control_values',
     'evoformer/control_values',

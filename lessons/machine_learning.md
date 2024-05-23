@@ -73,10 +73,14 @@ We have four layers that we need to calculate derivatives for:
 
 ### L2-Loss
 The derivative for the L2-loss is calculated like this:
-$$L = \frac{1}{N}\sum_i (y_i-\hat{y_i})^2, \;\frac{\partial L}{\partial y_i} = \frac{1}{N}\sum_i 2 (y_i-\hat{y_i})$$
-We shouldn't forget, that $y_i$ and $\hat{y_i}$ aren't numbers here, but 10-element vectors (the index is not for the individual numbers, but for the individual samples in the batch). So, writing this out as single numbers, it would look like
-$$L = \frac{1}{N}\sum_{i=1}^{N} \sum_{j=1}^{10} (y_{ij}-\hat{y_{ij}})^2$$
-but that doesn't change the calculation of the derivative.
+$$\begin{align*}L &= \frac{1}{N}\sum_i (y_i-\hat{y_i})^2 \\ \frac{\partial L}{\partial y_i} &= \frac{1}{N}\cdot 2 \cdot (y_i-\hat{y_i})\end{align*}$$
+We shouldn't forget, that $y_i$ and $\hat{y_i}$ aren't numbers here, but 10-element vectors (the index is not for the individual numbers, but for the individual samples in the batch). So, writing this out as single numbers, it would look like this:
+$$\begin{align*}
+L &= \frac{1}{N}\sum_{i=1}^{N} \sum_{j=1}^{10} (y_{ij}-\hat{y}_{ij})^2 \\
+\frac{\partial L}{\partial y_{ij}} &= \frac{1}{N}\cdot 2 \cdot (y_{ij}-\hat{y}_{ij})
+\end{align*}
+$$
+As we can see, it doesn't change the form of the derivative.
 
 ### Affine Linear Layer
 Written out, the formulation of an affine linear layer looks like this:
