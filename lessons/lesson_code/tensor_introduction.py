@@ -142,6 +142,16 @@ A = torch.zeros((3, 3))
 # Assignment to the second column of A
 A[:, 1] = torch.tensor([0, 1, 2])
 
+# [Left-hand side] = [Right-hand side]
+
+# Right-hand side indexing:
+# Retrieval of the second column of A
+col = A[:, 1]
+
+# Left-hand side indexing:
+# Assignment to the second column of A
+A[:, 1] = torch.tensor([0, 1, 2])
+
 
 
 ## Computations along Axes
@@ -170,6 +180,10 @@ A.sum(dim=None)
 # Result: torch.tensor(66)
 # Shape = (,)
 
+A = torch.arange(12).reshape(4, 3)
+A.sum(dim=(1, 2))
+# A.sum(dim = (-1, -2))
+
 # Shape (2, 3)
 A = torch.tensor([
     [0, 3, 5],
@@ -188,6 +202,20 @@ torch.linalg.vector_norm(A, dim=1)
 
 torch.mean(A, dim=1)
 torch.std(A, dim=1)
+
+# A has shape (4, 3)
+
+# Out shape: (4, 1)
+torch.argmax(A, dim=1, keepdim=True)
+
+# Out shape: (4, 1)
+torch.mean(A, dim=1, keepdim=True)
+torch.std(A, dim=1, keepdim=True)
+
+# Out shape: (4, 1)
+torch.linalg.vector_norm(A, dim=1, keepdim=True)
+
+torch.cat((R, t), dim=-1)
 
 # Shape (4, 3)
 A = torch.tensor([ #

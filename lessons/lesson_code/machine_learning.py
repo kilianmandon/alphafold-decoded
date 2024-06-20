@@ -91,3 +91,14 @@ W1 = W1 - 0.001 * grads['W1']
 W2 = W2 - 0.001 * grads['W2']
 b1 = b1 - 0.001 * grads['b1']
 b2 = b2 - 0.001 * grads['b2']
+
+W = None
+dz = None
+
+# dx is a linear operation between W and dz
+
+# W has shape (c_out, c_in)
+# dz has shape (N, c_out)
+# dx should have shape (N, c_in)
+
+dx = torch.einsum('oi,No->Nc', W, dz)

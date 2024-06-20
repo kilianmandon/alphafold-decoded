@@ -15,3 +15,8 @@ dependencies:
   - ffmpeg
   - py3dmol
   - nbformat
+  - nbconvert
+  - transformers
+  - lightning
+  - datasets
+  - tensorboard

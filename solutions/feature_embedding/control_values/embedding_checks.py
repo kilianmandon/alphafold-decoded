@@ -31,7 +31,7 @@ batched_feature_shapes = {
 }
 
 test_inputs = {
-    key: torch.linspace(-2, 2, math.prod(shape)).reshape(shape)
+    key: torch.linspace(-2, 2, math.prod(shape)).reshape(shape).double()
     for key, shape in feature_shapes.items()
 }
 
@@ -75,6 +75,7 @@ def test_module_shape(module, test_name, control_folder, overwrite_results=False
 def controlled_execution(module, inp, method):
     was_training = module.training
     module.eval()
+    module.double()
     with torch.no_grad():
         original_params = [param.clone() for param in module.parameters()]
         for param in module.parameters():
@@ -132,13 +133,19 @@ def test_module_method(module, test_name, input_names, output_names, control_fol
 
     for out, out_file_name, out_name in zip(non_batched_out, out_file_names, output_names):
         expected_out = torch.load(out_file_name)
-        assert torch.allclose(out, expected_out, atol=1e-5), f'Problem with output {out_name} in test {test_name} in non-batched check.'
+        abs_err = (out-expected_out).abs()
+        rel_err = abs_err / (torch.maximum(out.abs(),expected_out.abs())+1e-8)
+        assert torch.allclose(out, expected_out, atol=1e-5), f'Problem with output {out_name} in test {test_name} in non-batched check. Relative Error: {rel_err.mean()}'
 
     for out, out_file_name, out_name in zip(batched_out, out_file_names, output_names):
         expected_out = torch.load(out_file_name)
         expected_out_batch_shape = (N,) + expected_out.shape
         expected_out = expected_out.unsqueeze(0).broadcast_to(expected_out_batch_shape)
-        assert torch.allclose(out, expected_out, atol=1e-5), f'Problem with output {out_name} in test {test_name} in batched check.'
+
+        abs_err = (out-expected_out).abs()
+        rel_err = abs_err / (torch.maximum(out.abs(),expected_out.abs())+1e-8)
+
+        assert torch.allclose(out, expected_out, atol=1e-5), f'Problem with output {out_name} in test {test_name} in batched check. Relative Error: {rel_err}'
 
     
 def test_module_forward(module, test_name, input_names, output_names, control_folder, overwrite_results=False):
