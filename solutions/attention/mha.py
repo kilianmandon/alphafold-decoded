@@ -7,9 +7,9 @@ class MultiHeadAttention(nn.Module):
     A MultiHeadAttention module with optional bias and optional gating.
     """
 
-    def __init__(self, c_in, c, N_head, attn_dim, gated=False, is_global=False):
+    def __init__(self, c_in, c, N_head, attn_dim, gated=False, is_global=False, use_bias_for_embeddings=False):
         """
-        Initialize the module. A MultiHeadAttention theoretically consists of 
+        Initializes the module. MultiHeadAttention theoretically consists of 
         N_head separate linear layers for the query, key and value embeddings.
         However, the embeddings can be computed jointly and split afterwards,
         so we only need one query, key and value layer with larger c_out.
@@ -18,7 +18,7 @@ class MultiHeadAttention(nn.Module):
             c_in (int): Input dimension for the embeddings.
             c (int): Embedding dimension for each individual head.
             N_head (int): Number of heads.
-            attn_dim (int): The dimension in the input tensor, along which
+            attn_dim (int): The dimension in the input tensor along which
                 the attention mechanism is performed.
             gated (bool, optional): If True, an additional sigmoid-activated 
                 linear layer will be multiplicated against the weighted 
@@ -27,6 +27,10 @@ class MultiHeadAttention(nn.Module):
             is_global (bool, optional): If True, global calculation will be performed.
                 For global calculation, key and value embeddings will only use one head,
                 and the q query vectors will be averaged to one query vector.
+                Defaults to False.
+            use_bias_for_embeddings (bool, optional): If True, query, 
+                key, and value embeddings will use bias, otherwise not. 
+                Defaults to False.
         """
         super().__init__()
 
@@ -39,18 +43,18 @@ class MultiHeadAttention(nn.Module):
 
         ##########################################################################
         # TODO: Initialize the query, key, value and output layers.              #
-        #   Following the AlphaFold paper, query, key, and value layers will     #
-        #   use no bias, while the output layer will use a bias.                 #
-        #   If gated is true, initialize another linear with bias.               #
+        #   Whether or not query, key, and value layers use bias is determined   #
+        #   by `use_bias` (False for AlphaFold). The output layer should always  #
+        #   use a bias. If gated is true, initialize another linear with bias.   #
         #   For compatibility use the names linear_q, linear_k, linear_v,        #
         #   linear_o and linear_g.                                               #
         ##########################################################################
         
-        self.linear_q = nn.Linear(c_in, c*N_head, bias=False)
+        self.linear_q = nn.Linear(c_in, c*N_head, bias=use_bias_for_embeddings)
 
         c_kv = c if is_global else c*N_head
-        self.linear_k = nn.Linear(c_in, c_kv, bias=False)
-        self.linear_v = nn.Linear(c_in, c_kv, bias=False)
+        self.linear_k = nn.Linear(c_in, c_kv, bias=use_bias_for_embeddings)
+        self.linear_v = nn.Linear(c_in, c_kv, bias=use_bias_for_embeddings)
 
         self.linear_o = nn.Linear(c*N_head, c_in)
 
@@ -152,7 +156,7 @@ class MultiHeadAttention(nn.Module):
 
         return q, k, v
 
-    def forward(self, x, bias=None):
+    def forward(self, x, bias=None, attention_mask=None):
         """
         Forward pass through the MultiHeadAttention module.
 
@@ -161,6 +165,9 @@ class MultiHeadAttention(nn.Module):
             bias (torch.tensor, optional): Optional bias tensor of shape
                 (*, N_head, q, k) that will be added to the attention weights. 
                 Defaults to None.
+            attention_mask (torch.tensor, optional): Optional attention mask
+                of shape (*, k). If set, the keys with value 0 in the mask will
+                not be attended to.
 
         Returns:
             torch.tensor: Output tensor of shape (*, q/k/v, *, c_in)
@@ -176,12 +183,19 @@ class MultiHeadAttention(nn.Module):
         #   - Calculate the attention weights of shape (*, N_head, q, k)         #
         #       from q and k. You can use torch.einsum for this.                 #
         #   - If a bias was given:                                               #
-        #       - extract the bias shape by omitting the last 3 dims from bias.  #
+        #       - extract the bias batch shape by omitting the last 3 dims       #
+        #         from bias.                                                     #
         #       - construct a broadcastable bias shape, by concatenating         #
         #           bias_batch_shape, (1,) * n, and the last three dims of bias. #
         #           Choose n such that the broadcastable shape has as many dims  #
         #           as the attention scores.                                     #
         #       - add the bias to the attention scores.                          #
+        #   - If an attention mask was given (not needed for AlphaFold):         #
+        #       - unsqueeze the mask to make it broadcastable against the        #
+        #         attention scores of shape (*, N_head, q, k).                   #
+        #       - create a tensor `offset`` of the same shape as the mask with   #
+        #         the value -1e8 where the mask is 0 and zero elsewhere.         #
+        #       - add the offset to the raw attention scores.                    #
         #   - Use softmax to convert the attention scores into a                 #
         #       probability distribution.                                        #
         #   - Weight the value vectors by the attention weights and sum          #
@@ -218,6 +232,12 @@ class MultiHeadAttention(nn.Module):
             bias = bias.view(bias_bc_shape)
 
             a = a + bias
+
+        if attention_mask is not None:
+            attention_mask = attention_mask[..., None, None, :]
+            offset = (attention_mask==0) * -1e8
+            a = a + offset
+
         a = torch.softmax(a, dim=-1)
         # o has shape [*, N_head, q, c]
         o = torch.einsum('...qk,...kc->...qc', a, v)

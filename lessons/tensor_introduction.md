@@ -144,7 +144,7 @@ Broadcasting is an incredibly powerful tool. Together with the indexing, reshapi
 
 If you try to do so however, you will see that these methods can quickly get a little cumbersome. Let's look at the most classic tensor-tensor operation: Matrix multiplication. Given two matrices `A` of shape (i,k) and `B` of shape (k,j), the matrix product can formulated like this:
 
-For each row of `A` and for each column of `B`, calculate the pointwise product of the row and the column. After that, sum up along the row-dimension of `A` (which is the column dimension of `B`)
+For each row of `A` and for each column of `B`, calculate the pointwise product of the row and the column. After that, sum up along the column-dimension of `A` (which is the row dimension of `B`)
 
 We have seen before that 'each-with-each' calculations can be computed by expanding with one-dimensions and doing a broadcasted multiplication. For the first step of this problem, we would calculate `C = A.reshape(i, k, 1) * B.reshape(1, k, j)`. Let's think about what that actually means: Multiplication is pointwise, so this is C[i,k,j] = A[i,k,j] * B[i,k,j]. But the last dimension of A just comes from duplication using broadcasting, and so does the first from B. So this actually reads as C[i,k,j] = A[i,k] * B[k,j], or $c_{ikj} = a_{ik} \cdot b_{kj}$ in math notation. If you have seen a formal version of matrix multiplication before, all that's left to do is summing up along k. We can do that in Pytorch using torch.sum.
 
