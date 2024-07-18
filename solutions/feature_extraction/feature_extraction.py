@@ -37,11 +37,11 @@ def load_a3m_file(file_name: str):
     seqs = None
 
     ##########################################################################
-    # TODO: 
-    # 1. Read the A3M file line by line.
-    # 2. Identify lines that start with '>' as sequence description lines.
-    # 3. Extract the sequence from the lines following each description line.
-    # 4. Strip them to remove leading and trailing whitespace
+    # TODO:                                                                  #
+    # 1. Read the A3M file line by line.                                     #
+    # 2. Identify lines that start with '>' as sequence description lines.   #
+    # 3. Gather the sequence from the lines following each description line. #
+    # 4. Strip them to remove leading and trailing whitespace                #
     ##########################################################################
 
 
@@ -123,26 +123,30 @@ def initial_data_from_seqs(seqs):
     aa_distribution = None
 
     ##########################################################################
-    # TODO: 
-    # 1. Calculate the 'deletion_count_matrix':
-    #    * Initialize an empty list of lists to store deletion counts.
-    #    * Iterate through the sequences in 'seqs':
-    #       * Create a list to track deletions for the current sequence.
-    #       * Iterate through letters, counting lowercase letters as deletions.
-    #       * Append the deletion count list to the main 'deletion_count_matrix' only 
-    #         if the sequence (after removing deletions) has not been seen before. 
-    #    * Convert 'deletion_count_matrix' into a PyTorch tensor. 
-    # 2. Identify 'unique_seqs':  
-    #    * Create an empty list to store unique sequences.
-    #    * Iterate through the sequences in 'seqs':
-    #       * Remove lowercase letters (deletions) from the sequence.
-    #       * If the sequence (without deletions) is not already in the 'unique_seqs'
-    #         list, add it.
-    #    * Apply the `onehot_encode_aa_type` function to each sequence in 'unique_seqs' 
-    #      to get a tensor of shape (N_seq, N_res, 22) representing the one-hot encoded amino acids. 
-    # 3. Compute 'aa_distribution':
-    #    * Average the one-hot encoded 'unique_seqs' tensor across the first dimension
-    #      (representing sequences) to calculate the amino acid distribution.
+    # TODO:                                                                  #
+    # 1. Calculate the 'deletion_count_matrix':                              #
+    #    * Initialize an empty list of lists to store deletion counts.       #
+    #    * Iterate through the sequences in 'seqs':                          #
+    #       * Create a list to track deletions for the current sequence.     #
+    #       * Iterate through letters, counting lowercase letters            #
+    #         as deletions.                                                  #
+    #       * Append the deletion count list to the main                     #
+    #         'deletion_count_matrix' only if the sequence                   # 
+    #         (after removing deletions) has not been seen before.           #
+    #    * Convert 'deletion_count_matrix' into a PyTorch tensor.            #
+    # 2. Identify 'unique_seqs':                                             #
+    #    * Create an empty list to store unique sequences.                   #
+    #    * Iterate through the sequences in 'seqs':                          #
+    #       * Remove lowercase letters (deletions) from the sequence.        #
+    #       * If the sequence (without deletions) is not already in the      #
+    #         'unique_seqs' list, add it.                                    #
+    #    * Apply the `onehot_encode_aa_type` function to each sequence       #
+    #      in 'unique_seqs' to get a tensor of shape (N_seq, N_res, 22)      #
+    #      representing the one-hot encoded amino acids.                     #
+    # 3. Compute 'aa_distribution':                                          #
+    #    * Average the one-hot encoded 'unique_seqs' tensor across the       #
+    #      first dimension (representing sequences) to calculate the         #
+    #      amino acid distribution.                                          #
     ##########################################################################
 
     deletion_count_matrix = []
@@ -555,13 +559,13 @@ def calculate_msa_feat(features):
     # TODO:
     # 1. **Prepare Features:**
     #     * Obtain the following features from the 'features' dictionary:
-    #        - 'cluster_msa' (Shape: (N_clust, N_res, 23))
+    #        - 'cluster_msa' (Shape: (N_clust, N_res, 23)), named msa_aatype in feature dictionary
     #        - 'msa_deletion_count' (unnormalized, Shape: (N_clust, N_res))
     #        - 'cluster_deletion_mean' (Shape: (N_clust, N_res))
     #        - 'cluster_profile' (normalized, Shape: (N_clust, N_res, 23))
     #     * Calculate:
-    #         - `cluster_has_deletion`: Boolean tensor of shape (N_clust, N_res, 1) indicating the presence of deletions.
-    #         - `cluster_deletion_value`: 2/pi*arctan(x/3)-normalized msa_deletion_count of shape (N_clust, N_res, 1).
+    #         - `cluster_has_deletion`: Boolean tensor of shape (N_clust, N_res, 1) indicating the presence of deletions. Calculated from 'msa_deletion_count'.
+    #         - `cluster_deletion_value`: 2/pi*arctan(x/3)-normalized msa_deletion_count of shape (N_clust, N_res, 1). Calculated from 'msa_deletion_count'.
     # 2. **Concatenate Features:** 
     #     * Use `torch.cat` to concatenate the following tensors, in this order, along the last dimension to create the final 'msa_feat' tensor: 
     #          - `cluster_msa` 
