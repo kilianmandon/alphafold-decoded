@@ -1,10 +1,11 @@
 # Feature Extraction
 
-Short version:
-Feature Extraction: Connection of domain specific data formats to tensors, the data format for machine learning. For AlphaFold, the domain specific format of the input data are three different input sources:
-1) The Amino Acid Sequence, one-letter codes representing the 20 aa
-2) Evolutionary History: MSA data. Sequences that are similar to the target sequence
-3) Evolutionary History: Structure of Homologues. Historically the most relevant data for structure prediction. Interesting enough, AF doesn't really seem to need the template stack as input, in particular if the MSA is rich and found many sequences with high identity. We won't implement the template stack in AlphaFold to make the code easier to follow, I feel like this whole project is already daring enough as it is. For example in the popular online tool ColabFold, the template stack is disabled by default as well.
+Hi everyone and welcome to this video on feature extraction in AlphaFold. This is the fourth video in our series where we'll be implementing AlphaFold from scratch. Feature extraction means connecting the domain specific data formats that encode the input data to tensors, the data format for machine learning. For that we'll first need to understand what suitable input data for protein structure prediction is, how its initial data format looks like, and a few transformations to convert it to tensors. 
+This video and the next two will be a little shorter than the introductory ones. There's not so much theory to explain, and it's more of a list of steps you need to implement. It's still quite a bit of work to actually implement this in python, as you'll see when working through the notebook. Since feature extraction has to be flexible regarding its input, you need a bit more non-standard PyTorch code to handle it. But for now, let's start with the theory.
+
+The first obvious input is the amino acid sequence of the protein you want to predict the structure of. It is given as a string and each letter represents one of the 20 amino acids. But AlphaFold uses two additional inputs that try to get informations on the structure from the protein's evolutionary history.
+The first of these two is MSA data. It is a list of sequences found in other organisms that are similar to the target sequence.
+And the second is the 3D structure of so called templates, proteins that are very similar to the target and where the structure has already been determined. Historically, this has been the most relevant data for structure prediction. Interesting enough, AlphaFold doesn't really seem to need the template stack for input, in particular if the MSA is diverse and provides rich evolutionary information. We won't implement the template stack in AlphaFold to make the code easier to follow, and it might be less used than you think anyway. In the popular online tool ColabFold for example, the template stack is disabled by default as well.
 
 This means, we are left with the amino acid sequence and the MSA data. The amino acid sequence is simply one-hot encoded, with 21 tokens including an additional "Unknown" token for amino acids that are not known in the sequence. MSA data is a little more complicated.
 
