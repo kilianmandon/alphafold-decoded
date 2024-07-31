@@ -1,7 +1,10 @@
 # Feature Extraction
 
-Hi everyone and welcome to this video on feature extraction in AlphaFold. This is the fourth video in our series where we'll be implementing AlphaFold from scratch. Feature extraction means connecting the domain specific data formats that encode the input data to tensors, the data format for machine learning. For that we'll first need to understand what suitable input data for protein structure prediction is, how its initial data format looks like, and a few transformations to convert it to tensors. 
-This video and the next two will be a little shorter than the introductory ones. There's not so much theory to explain, and it's more of a list of steps you need to implement. It's still quite a bit of work to actually implement this in python, as you'll see when working through the notebook. Since feature extraction has to be flexible regarding its input, you need a bit more non-standard PyTorch code to handle it. But for now, let's start with the theory.
+Hi everyone and welcome to this video on feature extraction in AlphaFold. I'm Kilian Mandon and this is the fourth video in our series where we'll be implementing AlphaFold from scratch. It's also the first one where we are going into AlphaFold specific content. So, if you're already familiar with machine learning and attention, you're good to start here, just know that you'll either need to implement the MultiHeadAttention module in the assignment for the last video, or copy our version from github, to go through with the AlphaFold implementation yourself.
+
+Feature extraction means converting the domain specific data formats we want to use as inputs into tensors, the data format for machine learning. There are two non-obvious questions here. The first one is what that domain specific data should be, that is which biological data actually carries information on the protein structure. And the second is how we transform it into tensors. So, let's get into it!
+
+<!-- This video and the next two will be a little shorter than the introductory ones. There's not so much theory to explain, and it's more of a list of steps you need to implement. It's still quite a bit of work to actually implement this in python, as you'll see when working through the notebook. Since feature extraction has to be flexible regarding its input, you need a bit more non-standard PyTorch code to handle it. But for now, let's start with the theory. -->
 
 The first obvious input is the amino acid sequence of the protein you want to predict the structure of. It is given as a string and each letter represents one of the 20 amino acids. But AlphaFold uses two additional inputs that try to get informations on the structure from the protein's evolutionary history.
 The first of these two is MSA data. It is a list of sequences found in other organisms that are similar to the target sequence.
@@ -68,3 +71,7 @@ The feature 'extra_msa'feat' is constructed by concatenating 'extra_msa', 'extra
 
 Note that there's some randomness in the input creation, notably the selection of the cluster centers and during masking. As we'll see later, AlphaFold does its full prediction multiple times, recycling the predicted positions and other outputs in the newer passes. The inputs for the model are created for each run individually by just repeating all these steps, so they are somewhat different due to the randomness involved.
 
+
+So, this is how feature extraction works for AlphaFold. Selecting the relevant input data for a problem and shaping it into tensors are key tasks for machine learning in new domains, and I think it's really cool to see an example of how we can do this for a problem like protein structure prediction. You can find the tutorial notebook for this topic Linked in the description, where you'll build the full feature extraction pipeline for AlphaFold by yourself. 
+
+In the next two videos we'll explore how the Evoformer, AlphaFold's core module, transforms these features. Then we'll tackle the inverse of today's topic: Getting from tensors to actual protein structures. So, see you in the next videos, and happy coding!
