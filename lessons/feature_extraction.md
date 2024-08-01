@@ -72,6 +72,8 @@ The feature 'extra_msa'feat' is constructed by concatenating 'extra_msa', 'extra
 Note that there's some randomness in the input creation, notably the selection of the cluster centers and during masking. As we'll see later, AlphaFold does its full prediction multiple times, recycling the predicted positions and other outputs in the newer passes. The inputs for the model are created for each run individually by just repeating all these steps, so they are somewhat different due to the randomness involved.
 
 
-So, this is how feature extraction works for AlphaFold. Selecting the relevant input data for a problem and shaping it into tensors are key tasks for machine learning in new domains, and I think it's really cool to see an example of how we can do this for a problem like protein structure prediction. You can find the tutorial notebook for this topic Linked in the description, where you'll build the full feature extraction pipeline for AlphaFold by yourself. 
+So, this is how feature extraction works for AlphaFold. 
+
+Selecting the relevant input data for and shaping it into tensors are key for using machine learning in new problem settings.  I think it's really cool to see an example of how we can do this for a problem like protein structure prediction. You can find the tutorial notebook for this topic Linked in the description, where you'll build the full feature extraction pipeline for AlphaFold by yourself. 
 
 In the next two videos we'll explore how the Evoformer, AlphaFold's core module, transforms these features. Then we'll tackle the inverse of today's topic: Getting from tensors to actual protein structures. So, see you in the next videos, and happy coding!
