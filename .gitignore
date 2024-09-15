@@ -1,5 +1,6 @@
 current_implementation
 .vscode
+.DS_Store
 out_dir/
 test_outputs/
 __pycache__/
