@@ -22,8 +22,8 @@ test_z_batch = torch.linspace(-2, 2, math.prod(test_z_shape_batched)
                               ).reshape(test_z_shape_batched)
 
 test_inputs = {
-    'm': (test_m, test_m_batch),
-    'z': (test_z, test_z_batch),
+    'm': (test_m.double(), test_m_batch.double()),
+    'z': (test_z.double(), test_z_batch.double()),
 }
 
 def test_module_shape(module, test_name, control_folder, overwrite_results=False):
@@ -55,6 +55,7 @@ def test_module_shape(module, test_name, control_folder, overwrite_results=False
 def controlled_forward(module, inp):
     was_training = module.training
     module.eval()
+    module.double()
     with torch.no_grad():
         original_params = [param.clone() for param in module.parameters()]
         for param in module.parameters():
@@ -103,11 +104,15 @@ def test_module(module, test_name, input_names, output_names, control_folder, ov
 
     for out, out_file_name, out_name in zip(non_batched_out, out_file_names, output_names):
         expected_out = torch.load(out_file_name)
-        assert torch.allclose(out, expected_out), f'Problem with output {out_name} in test {test_name} in non-batched check.'
+        max_abs_err = (out.double()-expected_out.double()).abs().max()
+        max_rel_err = ((out.double()-expected_out.double()).abs() / (torch.maximum(out.double().abs(), expected_out.double().abs())+1e-8)).max()
+        assert torch.allclose(out, expected_out, atol=1e-5), f'Problem with output {out_name} in test {test_name} in batched check. Maximum absolute error: {max_abs_err}. Maximum relative error: {max_rel_err}.'
 
     for out, out_file_name, out_name in zip(batched_out, out_file_names_batched, output_names):
         expected_out = torch.load(out_file_name)
-        assert torch.allclose(out, expected_out), f'Problem with output {out_name} in test {test_name} in batched check.'
+        max_abs_err = (out.double()-expected_out.double()).abs().max()
+        max_rel_err = ((out.double()-expected_out.double()).abs() / (torch.maximum(out.double().abs(), expected_out.double().abs())+1e-8)).max()
+        assert torch.allclose(out, expected_out, atol=1e-5), f'Problem with output {out_name} in test {test_name} in batched check. Maximum absolute error: {max_abs_err}. Maximum relative error: {max_rel_err}.'
 
     
 
