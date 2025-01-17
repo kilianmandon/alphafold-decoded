@@ -1,6 +1,6 @@
 # AlphaFold Decoded
 
-This project aims to provide an easy-to-understand implementation of AlphaFold, designed for educational purposes. The repository will be structured with a series of Jupyter Notebooks or Python files containing interactive exercises and TODO markers. By completing these coding exercises, users will gain a hands-on understanding of AlphaFold's core concepts.
+This project aims to provide an easy-to-understand implementation of AlphaFold, designed for educational purposes. The repository is structured with a series of Jupyter Notebooks or Python files containing interactive exercises and TODO markers. By completing these coding exercises, users will gain a hands-on understanding of AlphaFold's core concepts.
 
 ## Project Description
 
@@ -12,7 +12,7 @@ AlphaFold revolutionized the field of protein structure prediction. This project
 
 ## Folder Structure
 
-* **tutorials:** Will house Jupyter Notebooks and Python files containing interactive exercises designed to guide users through implementing AlphaFold components. These exercises will be populated by reformatting and adapting content from the `current_implementation` folder. 
+* **tutorials:** Houses Jupyter Notebooks and Python files containing interactive exercises designed to guide users through implementing all AlphaFold components. 
 * **solutions:** Provides solutions to the coding exercises.  
 
 ## Setup Instructions
@@ -75,7 +75,6 @@ If you're an advanced user and prefer working in your own local environment, fol
 
 
 ## Working on the Tutorials
-All of the tutorials are still being improved. 
 The tutorials should be completed in the following order:
 
 1. Tensor Introduction
