@@ -1,6 +1,8 @@
 # AlphaFold Decoded
 
-This project aims to provide an easy-to-understand implementation of AlphaFold, designed for educational purposes. The repository is structured with a series of Jupyter Notebooks or Python files containing interactive exercises and TODO markers. By completing these coding exercises, users will gain a hands-on understanding of AlphaFold's core concepts.
+This project aims to provide an easy-to-understand implementation of AlphaFold, designed for educational purposes. Rather than filling in small gaps in an existing codebase, this project guides users through building AlphaFold entirely from scratch. The repository is structured with a series of Jupyter Notebooks or Python files containing interactive explanations, coding exercises, and TODO markers to support hands-on learning.
+
+A companion [YouTube series](https://youtube.com/playlist?list=PLJ0WcPQS7xJVJr6ceIPFSkAGAgrkmw1c9&si=GUj4NePZ2i2ZnTBY) is available, offering detailed walkthroughs and explanations of each concept and implementation step.
 
 ## Project Description
 
