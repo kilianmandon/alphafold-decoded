@@ -206,13 +206,13 @@ def sigmoid_backward(dout, cache):
     return dx
 
 
-def l2_loss(y, y_hat):
+def l2_loss(y_hat, y):
     """
     Computes the L2-loss. 
 
     Args:
-        y (torch.tensor): Inferred output, shape (N, num_classes).
-        y_hat (torch.tensor): Ground-truth labels, shape (N,).
+        y_hat (torch.tensor): Inferred output of the sigmoid layer, shape (N, num_classes).
+        y (torch.tensor): Ground-truth labels, shape (N,).
 
     Returns:
         tuple: A tuple containing the following values:
@@ -224,12 +224,12 @@ def l2_loss(y, y_hat):
     dy = None
 
     ##########################################################################
-    # TODO: Implement the L2-loss as 1/N * sum((y-y_hat)**2),                #
-    #        where N is the batch-size. The labels y_hat are provided        #
-    #        as class indices. To be used in the loss formulation,           #
+    # TODO: Implement the L2-loss as 1/N * sum((y_hat-y)**2),                #
+    #        where N is the batch-size. The ground truth labels y are        #
+    #        provided as class indices. To be used in the loss formulation,  #
     #        they need to be one-hot encoded. You can use                    #
     #        nn.functional.one_hot for this. In addition to the loss,        #
-    #        compute the gradient of the loss w.r.t. y.                      #
+    #        compute the gradient of the loss w.r.t. y_hat.                  #
     ##########################################################################
 
     # Replace "pass" statement with your code
