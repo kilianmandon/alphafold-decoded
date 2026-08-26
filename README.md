@@ -45,35 +45,30 @@ Colab provides a fast and easy way to get started with the tutorials, especially
 
 ### Local Setup (For advanced users) 
 
-If you're an advanced user and prefer working in your own local environment, follow these steps:
+If you're an advanced user and prefer working in your own local environment, follow these steps. If you are on Windows, consider working through [WSL](https://code.visualstudio.com/docs/remote/wsl) instead. 
 
-1. **Install a Package Manager (if needed):**
-   * **Conda:** If you have Conda, proceed to the next step.
-   * **Mamba:** For faster setup, install Mamba ([https://mamba.readthedocs.io/en/latest/](https://mamba.readthedocs.io/en/latest/)).
+1. **Install the Package Manager uv (if needed):**
+   ```bash
+   # On Mac or Linux
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+   # On Windows
+   powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+   ```
 
 2. **Install Dependencies**
-   * **Select the right environment file:**
-      * `environment_cpu.yml` (no GPU) 
-      * `environment_cuda.yml` (NVIDIA GPU)
-      * `environment_mac.yml` (Mac systems)  
-   * **Install using Conda or Mamba:**
       ```bash
-      # With Conda:
-      conda env create -f environment_cpu.yml  # Or environment_cuda.yml/mac.yml
-
-      # With Mamba:
-      mamba env create -f environment_cpu.yml  # Or environment_cuda.yml/mac.yml
+      uv sync
       ```
 
 3. **Activate the Environment:**
    ```bash
-   conda activate alphafold
+   source .venv/bin/activate
    ```
 
 4. **Launch Jupyter Notebook and Select Kernel:**
    * Start Jupyter Notebook from the 'tutorials' folder.
    * In text editors like VS Code, set the workspace setting "Jupyter: Notebook File Root" to 'tutorials'.
-   * Open a tutorial, ensuring the kernel name matches your environment ('alphafold').
+   * Open a tutorial, ensuring the kernel name matches your environment ('alphafold-decoded').
 
 
 ## Working on the Tutorials
