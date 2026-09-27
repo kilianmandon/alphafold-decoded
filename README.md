@@ -6,6 +6,8 @@ A companion [YouTube series](https://youtube.com/playlist?list=PLJ0WcPQS7xJVJr6c
 
 ## Project Description
 
+Optional: [Read online](https://webeditions.page/works/highly-accurate-protein-structure-prediction-with-alphafold/?via=placement:e38c30f39755c9a14138) — free HTML companion for the Jumper et al. Nature paper (source PDF unchanged).
+
 AlphaFold revolutionized the field of protein structure prediction. This project breaks down AlphaFold's complex processes into manageable steps. Users will actively participate in the implementation process by:
 
 * Filling out missing code sections within provided Jupyter Notebooks or Python files.
